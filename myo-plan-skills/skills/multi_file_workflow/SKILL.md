@@ -123,17 +123,37 @@ Listar uma única vez no topo:
 ```
 ## Ordem de execução por task (regra do projeto)
 
+Cada task tem `gate: humano | auto` (definido na task, validado no Gate 3). As tasks são agrupadas em fatias verticais; o gate e o checkpoint acontecem por fatia.
+
 1. Escrever os testes a partir dos casos listados na task.
-2. Validação humana dos testes antes de qualquer implementação.
+2. `gate: humano` → validação humana dos testes antes de qualquer implementação (pausa real). `gate: auto` → segue direto; os casos já foram aprovados no Gate 3.
 3. Implementar até os testes passarem.
 4. Se um teste validado falhar durante a implementação: não editar o teste — corrigir o código, ou pausar e sinalizar suspeita de teste errado.
 5. Edição de teste após validação humana exige justificativa explícita e re-validação — é mudança de SPEC, não de código.
+6. Rebaixar uma task de `humano` para `auto` durante a execução (pra parar menos) é proibido — é mudança de SPEC e exige re-validação, igual ao item 5.
+7. Stops por exceção valem SEMPRE, inclusive em `auto`: pare se uma premissa do PLAN/SPEC quebrar ou surgir ambiguidade que mude comportamento.
+8. Ao fim de cada fatia, apresente um checkpoint consolidado das tasks `auto` (testes escritos + diff por task) para revisão em bloco. O checkpoint NÃO substitui o gate `humano`, que é antes do código.
 ```
+
+#### Critérios de risco (classificação do `gate`)
+
+`gate: humano` se a task toca **pelo menos um**:
+- contrato público / API consumida por terceiros (mudança observável de fora);
+- migração ou escrita destrutiva de dados;
+- autenticação, autorização, segredos, permissão;
+- dinheiro / cobrança / saldo / repasse;
+- operação irreversível ou difícil de reverter;
+- alta incerteza: não dá pra listar arquivos concretos, área nova, ou o "como" ainda é dúvida.
+
+`gate: auto` só se localizada, mecânica, comportamento bem entendido e com cobertura existente (refactor interno, função pura, ajuste de texto, rename já mapeado).
+
+Regra de segurança: na dúvida, `humano`. "Parece simples" / "é só um rename" NÃO é critério — o que conta é blast radius e reversibilidade, nunca o tamanho da entrega.
 
 #### Cada task contém
 
 - **ID** (`T01`, `T02`, ...)
 - **Nome curto**
+- **`gate: humano | auto`** — com motivo de ≤1 linha (ver "Critérios de risco"). Na dúvida: `humano`.
 - **Arquivos tocados** — separados em **código** e **teste**
 - **Entrada esperada** — estado prévio + dependência de outras tasks
 - **Saída esperada** — o que existe depois que essa task termina
@@ -143,7 +163,7 @@ Listar uma única vez no topo:
 
 #### Estrutura do arquivo
 
-- Lista numerada na ordem de execução
+- Lista numerada na ordem de execução, **agrupada em fatias verticais** (cada fatia entrega um comportamento ponta-a-ponta; gate `humano` e checkpoint das `auto` acontecem por fatia)
 - **Grafo/lista de dependências entre tasks**
 - Seção **"Suposições adicionais que precisei fazer pra criar as tasks"**
 - Seção **"Pontas soltas"**
@@ -160,8 +180,8 @@ Listar uma única vez no topo:
 
 #### Gate 3 — validação do TASKS
 
-1. Apresente o TASKS criado, com destaque para tasks no limite superior do orçamento de 2h e dependências críticas.
-2. Aplique ajustes pedidos pelo usuário.
+1. Apresente o TASKS criado, com destaque para: tasks no limite superior do orçamento de 2h, dependências críticas, e a **classificação `gate:` de cada task + as fatias**.
+2. A validação do `gate:` aqui **É** a aprovação da estratégia de paradas: aprovada a classificação, as tasks `auto` rodam sem novo gate (só com os stops por exceção). É isto que legitima o `auto` — o agente não se auto-autoriza depois. Aplique ajustes pedidos.
 3. **Confirme explicitamente a validação final.**
 
 ---
@@ -176,6 +196,8 @@ Listar uma única vez no topo:
 | Fase 2 | Ambiguidade da SPEC que afeta tech ou teste | Pergunte antes de planejar |
 | Fase 3 | >12 tasks | Pare; recomende dividir em duas entregas |
 | Fase 3 | Gap SPEC/PLAN impede caso de teste claro | Pergunte |
+| Fase 3 | Dúvida sobre a classificação de risco de uma task | Classifique como `humano` |
+| Execução | Tentação de rebaixar task `humano`→`auto` p/ parar menos | Proibido; é mudança de SPEC, re-valide |
 
 ## Princípios
 
@@ -183,3 +205,15 @@ Listar uma única vez no topo:
 - **Respostas viram conteúdo, não notas avulsas**: cada resposta a uma "Pergunta em aberto" da SPEC precisa virar critério ou restrição. Cada resposta a uma "Área a explorar" do PLAN precisa virar decisão ou ajuste.
 - **Formato vence prolixidade**: o limite de linhas (100 SPEC / 150 PLAN) força a escolha do que é essencial. Não exceda.
 - **Casos de teste são a spec executável**: cada task tem `entrada → saída`; eles são o que será validado humanamente antes do código.
+- **Blast radius, não tamanho**: o gate escala com raio de impacto e reversibilidade, nunca com o tamanho da entrega. A frustração do usuário com paradas waivia a *cerimônia* (vira lote + checkpoint por fatia), nunca o gate das tasks de alto risco.
+- **Classificação travada no Gate 3**: `humano`/`auto` é aprovado pelo humano; é isso que legitima o `auto`. Durante a execução o agente segue a classificação — não a reabre pra parar menos.
+
+## Racionalizações proibidas (e a realidade)
+
+| Desculpa | Realidade |
+|---|---|
+| "O usuário disse 'confia, toca o barco'" | Frustração waivia cerimônia, não o gate de alto risco. Ele aprovou a classificação no Gate 3 — siga-a. |
+| "É só um rename, obviamente seguro" | "É só um rename" abre a maioria dos postmortems. O critério é blast radius, não aparência. |
+| "Escrevo teste + código e mostro no fim — é basicamente o gate" | Não. Em `humano` o teste é revisto ANTES do código. O checkpoint consolidado cobre só as `auto`. |
+| "Essa task arriscada parece localizada, me auto-aprovo" | Auto-aprovar contrato/dado/dinheiro/permissão vira o gate em teatro. Na dúvida, `humano`. |
+| "Rebaixo essas pra `auto` pra parar menos" | Reclassificar durante a execução é mudança de SPEC; re-valide. |

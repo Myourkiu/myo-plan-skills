@@ -1,0 +1,17 @@
+{
+  "name": "claude-skills",
+  "description": "Marketplace pessoal de skills do Claude Code",
+  "owner": {
+    "name": "pedro"
+  },
+  "plugins": [
+    {
+      "name": "myo-plan-skills",
+      "description": "Skills de planejamento e workflow: brainstorm de README, quick-plan, fluxo multi-arquivo (SPEC/PLAN/TASKS) e commits Conventional.",
+      "source": {
+        "type": "local",
+        "path": "./myo-plan-skills"
+      }
+    }
+  ]
+}

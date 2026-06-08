@@ -1,6 +1,6 @@
 {
-  "name": "claude-skills",
-  "description": "Marketplace pessoal de skills do Claude Code",
+  "name": "myo",
+  "description": "Skills pessoais de planejamento, debate de feature e commit",
   "owner": {
     "name": "pedro"
   },

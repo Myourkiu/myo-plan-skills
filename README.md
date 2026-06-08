@@ -1,8 +1,8 @@
-# claude-skills
+# myo-plan-skills
 
-Marketplace pessoal de skills do [Claude Code](https://code.claude.com/docs/en/plugins).
+Skills pessoais de planejamento, debate de feature e commit para o [Claude Code](https://code.claude.com/docs/en/plugins) — distribuídas como plugin via marketplace.
 
-Contém o plugin **`myo-plan-skills`**, que empacota minhas skills de planejamento e workflow.
+Contém o plugin **`myo-plan-skills`** (publicado no marketplace **`myo`**).
 
 ## Skills incluídas
 
@@ -18,8 +18,8 @@ Contém o plugin **`myo-plan-skills`**, que empacota minhas skills de planejamen
 Funciona no **Claude Code** e no **Claude Desktop**:
 
 ```
-/plugin marketplace add Myourkiu/claude-skills
-/plugin install myo-plan-skills@claude-skills
+/plugin marketplace add Myourkiu/myo-plan-skills
+/plugin install myo-plan-skills@myo
 ```
 
 Depois de instalado, as skills ficam disponíveis com o namespace do plugin, por exemplo:
@@ -28,15 +28,15 @@ Depois de instalado, as skills ficam disponíveis com o namespace do plugin, por
 ## Atualizar
 
 ```
-/plugin marketplace update claude-skills
+/plugin marketplace update myo
 ```
 
 ## Estrutura
 
 ```
-claude-skills/
+myo-plan-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # catálogo do marketplace
+│   └── marketplace.json          # catálogo do marketplace "myo"
 └── myo-plan-skills/              # o plugin
     ├── .claude-plugin/
     │   └── plugin.json           # manifesto do plugin

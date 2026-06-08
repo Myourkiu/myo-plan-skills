@@ -33,16 +33,16 @@ Depois de instalado, as skills ficam disponíveis com o namespace do plugin, por
 
 ## Estrutura
 
+O repo é, ao mesmo tempo, o **marketplace** e o **plugin** (na raiz):
+
 ```
 myo-plan-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # catálogo do marketplace "myo"
-└── myo-plan-skills/              # o plugin
-    ├── .claude-plugin/
-    │   └── plugin.json           # manifesto do plugin
-    └── skills/
-        ├── brainstorm-readme/SKILL.md
-        ├── commit-conversional-skill/SKILL.md
-        ├── multi_file_workflow/SKILL.md
-        └── quick-plan/SKILL.md
+│   ├── marketplace.json          # catálogo do marketplace "myo"
+│   └── plugin.json               # manifesto do plugin (servido via source url)
+└── skills/
+    ├── brainstorm-readme/SKILL.md
+    ├── commit-conversional-skill/SKILL.md
+    ├── multi_file_workflow/SKILL.md
+    └── quick-plan/SKILL.md
 ```

@@ -18,11 +18,9 @@ Contém o plugin **`myo-plan-skills`**, que empacota minhas skills de planejamen
 Funciona no **Claude Code** e no **Claude Desktop**:
 
 ```
-/plugin marketplace add pedro/claude-skills
+/plugin marketplace add Myourkiu/claude-skills
 /plugin install myo-plan-skills@claude-skills
 ```
-
-> Troque `pedro/claude-skills` pelo `owner/repo` real onde este repositório está hospedado.
 
 Depois de instalado, as skills ficam disponíveis com o namespace do plugin, por exemplo:
 `myo-plan-skills:quick-plan`.

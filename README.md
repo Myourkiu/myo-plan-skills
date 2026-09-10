@@ -11,6 +11,7 @@ Contém o plugin **`myo-plan-skills`** (publicado no marketplace **`myo`**).
 | `brainstorm-readme` | Debater e convergir um README antes de qualquer plano ou código. |
 | `quick-plan` | Plano leve de arquivo único (PLAN.md) para tarefas pequenas. |
 | `multi_file_workflow` | Fluxo de planejamento multi-arquivo (SPEC → PLAN → TASKS). |
+| `simple-implementation` | Implementa tasks pequenas com diagnóstico, TDD estrito e gates humanos. |
 | `commit-conversional-skill` | Impõe Conventional Commits (inglês, só título). |
 
 ## Instalação
@@ -44,5 +45,6 @@ myo-plan-skills/
     ├── brainstorm-readme/SKILL.md
     ├── commit-conversional-skill/SKILL.md
     ├── multi_file_workflow/SKILL.md
-    └── quick-plan/SKILL.md
+    ├── quick-plan/SKILL.md
+    └── simple-implementation/SKILL.md
 ```

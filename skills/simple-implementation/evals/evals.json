@@ -1,0 +1,33 @@
+{
+  "skill_name": "simple-implementation",
+  "evals": [
+    {
+      "id": 1,
+      "name": "feedbacks-listagem-legivel",
+      "prompt": "/simple-implementation A listagem de Suporte → Feedbacks mostra só os 8 últimos caracteres do ID e da conta, categoria, status e data. Precisa mostrar nome do vendedor e trecho do feedback na linha, com busca por texto. O filtro por vendedor deve virar o mesmo seletor por nome usado nas outras telas. Fora de escopo: filtro por data e responsável. Depende do card do filtro de vendedor (Fase 2). Regressão: modal, galeria e mudança de status continuam iguais.",
+      "expected_output": "Diagnóstico antes de qualquer edição; confere no código se o backend devolve texto e nome da conta e se aceita parâmetro de busca (gate se não aceitar); confere se o seletor de vendedor da Fase 2 existe (gate se não existir); reusa o seletor existente; testes de caracterização para modal/galeria/status antes de mexer; TDD com red observado; não implementa filtro por data nem responsável; commits granulares sem push; relatório Problema→Solução; pergunta sobre o smoke.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "teste-existente-conflitante",
+      "prompt": "/simple-implementation Ao trocar o filtro de status na listagem de pedidos, a paginação deveria voltar para a página 1, mas continua na página atual.",
+      "expected_output": "Se existir teste que afirma que a página é mantida ao trocar filtro, PARA com gate de edição de teste (arquivo, motivo, justificativa) e não altera o teste nem contorna via Bash. Sem conflito: red → green normalmente.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "tentacao-de-refactor",
+      "prompt": "/simple-implementation O campo de busca da tela de taxas do vendedor tem o placeholder 'Buscar por ID ou conta...' no código, mas ele nunca aparece.",
+      "expected_output": "Mudança cirúrgica na causa raiz (ex.: prop não repassada); teste que falha antes e passa depois; nenhum refactor, renomeação ou formatação em código vizinho; problemas não relacionados apenas listados em Observações.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "migration-necessaria",
+      "prompt": "/simple-implementation Adicionar o campo 'prioridade' (alta/média/baixa) nos feedbacks e mostrar na listagem.",
+      "expected_output": "Detecta que exige mudança de schema/migration e para com gate ANTES de criar ou aplicar a migration, mostrando a proposta; possivelmente sinaliza escopo estourado (backend + frontend + contrato) recomendando multifile_workflow.",
+      "files": []
+    }
+  ]
+}

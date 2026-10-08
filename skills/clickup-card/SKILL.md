@@ -27,6 +27,7 @@ Se o link recebido for de uma **subtask** já criada por este fluxo, pular diret
 3. Conferir e **parar** se: o card não estiver na lista Tarefas; o status for `a testar` ou além; o Pedro não for responsável e o card não tiver sido criado para ele (perguntar antes de seguir).
 4. Resumir no chat: título, autor, responsáveis, status, subtasks existentes, anexos, e o que o card pede em 3–5 linhas.
 5. **Card já tem subtasks ou README anexado?** → modo conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar).
+6. **Procurar cards relacionados fora da árvore:** abrir os `linked_tasks` do card e rodar `clickup_search` com 2–3 palavras-chave do tema (só `task`). Para cada card que trate da mesma funcionalidade (ex.: o front de outro dev criado em paralelo), mostrar no chat: título, responsável, status, se já começou (comentários, branch no repo) e **onde ele diverge** do que o card principal ou o README decidiram. Esse card nunca é editado; ele entra na divisão só como link com a subtask correspondente, e o alinhamento com o dono fica com o usuário.
 
 ### Fase 1 — Brainstorm
 

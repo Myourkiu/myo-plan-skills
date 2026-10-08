@@ -152,7 +152,7 @@ Nunca comentar por commit. `notify_all` sempre `false`.
 2. **Tamanho:** subtask que passaria de ~8 tasks no quick-plan → dividir.
 3. **Limite:** até ~6–8 subtasks por task principal; acima disso, propor quebrar o card principal (sugestão para quem criou o card).
 4. **Card de outra pessoa:** descrição original nunca é reescrita — README entra como anexo, e só o bloco de acompanhamento é acrescentado no fim.
-5. **Não duplicar:** se o card já tem subtasks, conciliar com o que existe.
+5. **Não duplicar:** se o card já tem subtasks, conciliar com o que existe. Card de outra pessoa sobre a mesma funcionalidade (fora da árvore) é mostrado com as divergências e ligado por link; a subtask própria só é criada com o OK do usuário.
 6. **Responsáveis:** subtasks nascem **sem responsável**. O Pedro entra como responsável só quando começar a executar aquela subtask.
 7. **README alterado:** anexar `README-v<n>.md` e comentar o que mudou.
 8. **Só escreve em:** tasks atribuídas ao Pedro ou criadas por este fluxo. Demais tasks: somente leitura.

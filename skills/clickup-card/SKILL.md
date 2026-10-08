@@ -69,7 +69,7 @@ Gatilho: "começa a subtask X", link de subtask, ou continuação natural após 
    - código pronto sem PR → `pr git aguardando`;
    - PR aberto → `pr git aberta` + link no bloco de acompanhamento da subtask + comentário;
    - fim de sessão → comentário de handoff (3 linhas).
-4. Após mudar o status de uma subtask, recalcular o da task principal: acompanha a subtask menos avançada, com teto em `pr git aberta`.
+4. Após mudar o status de uma subtask, recalcular o da task principal pela tabela das convenções (seção 2), com teto em `pr git aberta`.
 5. Depois do merge, **não mexer mais**: o QA move de `a testar` em diante.
 
 ## Regras de PARE

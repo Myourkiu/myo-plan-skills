@@ -32,7 +32,16 @@ Os demais campos personalizados (Equipe Suporte, Grupo Vip, Avisado da att, Resp
 
 **Teto do dev: `pr git aberta`.** Nunca mover para `a testar` ou além, e nunca mexer em task que já esteja de `a testar` em diante.
 
-**Task principal:** acompanha a subtask **menos avançada**, com o mesmo teto. Ex.: subtasks em `pr git aberta` + `em andamento` → principal em `em andamento`.
+**Task principal** (mesmo teto do dev):
+
+| Situação das subtasks | Status da principal |
+|---|---|
+| Nenhuma começou (todas em `aberto`/`pendente`) | `pendente` |
+| Alguma começou e alguma ainda está antes de `pr git aguardando` (inclui as que nem começaram) | `em andamento` |
+| Todas em `pr git aguardando` ou além | `pr git aguardando` |
+| Todas em `pr git aberta` ou além | `pr git aberta` |
+
+Ex.: backs em `pr git aguardando` + fronts em `pendente` → principal em `em andamento` (e não `pendente`: a regra antiga "acompanha a menos avançada" fazia a principal regredir).
 
 ---
 

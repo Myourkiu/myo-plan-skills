@@ -1,7 +1,7 @@
 {
   "name": "myo-plan-skills",
-  "description": "Skills de planejamento e workflow para Claude Code: brainstorm de README, quick-plan, fluxo multi-arquivo (SPEC/PLAN/TASKS) e commits Conventional.",
-  "version": "1.0.0",
+  "description": "Skills de planejamento e workflow para Claude Code: brainstorm de README, quick-plan, fluxo multi-arquivo (SPEC/PLAN/TASKS), commits Conventional e fluxo de cards do ClickUp.",
+  "version": "1.1.0",
   "author": {
     "name": "pedro"
   }

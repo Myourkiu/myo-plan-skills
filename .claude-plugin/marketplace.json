@@ -7,12 +7,12 @@
   "plugins": [
     {
       "name": "myo-plan-skills",
-      "description": "Skills de planejamento e workflow: brainstorm de README, quick-plan, fluxo multi-arquivo (SPEC/PLAN/TASKS) e commits Conventional.",
+      "description": "Skills de planejamento e workflow: brainstorm de README, quick-plan, fluxo multi-arquivo (SPEC/PLAN/TASKS), commits Conventional e fluxo de cards do ClickUp.",
       "source": {
         "source": "url",
         "url": "https://github.com/Myourkiu/myo-plan-skills.git"
       },
-      "version": "1.0.0",
+      "version": "1.1.0",
       "strict": true
     }
   ]

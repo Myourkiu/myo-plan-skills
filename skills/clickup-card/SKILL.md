@@ -20,6 +20,17 @@ Fase 0 (ler card) → Fase 1 (brainstorm) → Fase 2 (anexar README) → Fase 3 
 
 Se o link recebido for de uma **subtask** já criada por este fluxo, pular direto para a Fase 5.
 
+### Modo retroativo (card já implementado)
+
+Quando o trabalho do card já foi feito (há plano em `/plans` com SPEC/PLAN/TASKS/HANDOFF das entregas), o objetivo é só organizar o card:
+
+- **Fase 0** igual, mais: conferir no GitHub (`gh pr view` / `gh pr list --head <branch base>`) o estado real de cada PR das entregas e do PR base→`dev`.
+- **Fase 1 é pulada**: o README e as SPECs existentes são a fonte.
+- **Fase 3**: uma subtask por entrega e stack, montada a partir da SPEC e do HANDOFF (escopo, contrato, critérios por referência aos CA da SPEC, números da suíte, PRs). Os fronts saem dos guias em `doc-front/` quando houver.
+- **Fase 4**: cada subtask nasce **no status real** (ex.: etapa mergeada na base com PR base→`dev` ainda fechado → `pr git aguardando`) e com o responsável de quem fez. O que ainda não começou nasce `pendente`, sem responsável.
+- **Relações**: como o backend já existe, quase tudo é **link** (convenções, seção 4). Dependência só para o que de fato ainda não foi implementado.
+- **Anexos**: cada SPEC vai para a subtask da sua entrega, com nome que diga a entrega (`SPEC-entrega-1-pdv-local.md`), e cada guia de front vai para a subtask do front. Anexos antigos com nome genérico na task principal ficam (o conector não remove anexos) e o comentário de marco explica onde está cada coisa agora.
+
 ### Fase 0 — Ler o card
 
 1. Extrair o id do link (`/t/<id>` ou `/t/<workspace>/<id>`).

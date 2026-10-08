@@ -50,7 +50,7 @@ Quando o trabalho do card já foi feito (há plano em `/plans` com SPEC/PLAN/TAS
 
 Com o README aprovado e o "ok" para escrever no card:
 
-1. Anexar o README: `clickup_attach_task_file` com `file_data` em base64 (README costuma ter bem menos de 200KB); se maior, `clickup_request_attachment_upload` e seguir as instruções devolvidas. Nome: `README.md` (ou `README-v<n>.md` em nova versão).
+1. Anexar o README (e, em qualquer fase, qualquer arquivo local): pedir um ticket por arquivo com `clickup_request_attachment_upload` (`task_id` + `file_name`), montar um `jobs.json` no scratchpad e rodar `python -I scripts/upload_attachments.py jobs.json`; apagar o `jobs.json` depois (tem os tickets). Os tickets vencem em poucos minutos: pedir todos e subir em seguida. Não usar `clickup_attach_task_file` com base64 para arquivos locais: o conteúdo inteiro iria no texto da chamada. Nome: `README.md` (ou `README-v<n>.md` em nova versão).
 2. Acrescentar o bloco de acompanhamento no fim da descrição (ver convenções, seção 6), sem tocar no texto original.
 3. Comentário de marco "README anexado".
 

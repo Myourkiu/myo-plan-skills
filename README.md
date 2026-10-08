@@ -46,7 +46,8 @@ myo-plan-skills/
     ├── brainstorm-readme/SKILL.md
     ├── clickup-card/
     │   ├── SKILL.md
-    │   └── references/convencoes.md
+    │   ├── references/convencoes.md
+    │   └── scripts/upload_attachments.py
     ├── commit-conversional-skill/SKILL.md
     ├── multi_file_workflow/SKILL.md
     ├── quick-plan/SKILL.md

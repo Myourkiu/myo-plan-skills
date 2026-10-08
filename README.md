@@ -13,6 +13,7 @@ Contém o plugin **`myo-plan-skills`** (publicado no marketplace **`myo`**).
 | `multi_file_workflow` | Fluxo de planejamento multi-arquivo (SPEC → PLAN → TASKS). |
 | `simple-implementation` | Implementa tasks pequenas com diagnóstico, TDD estrito e gates humanos. |
 | `commit-conversional-skill` | Impõe Conventional Commits (inglês, só título). |
+| `clickup-card` | Leva um card do ClickUp do link aos PRs: brainstorm, README anexado, subtasks por stack relacionadas, status e comentários nas convenções do board. |
 
 ## Instalação
 
@@ -43,6 +44,9 @@ myo-plan-skills/
 │   └── plugin.json               # manifesto do plugin (servido via source url)
 └── skills/
     ├── brainstorm-readme/SKILL.md
+    ├── clickup-card/
+    │   ├── SKILL.md
+    │   └── references/convencoes.md
     ├── commit-conversional-skill/SKILL.md
     ├── multi_file_workflow/SKILL.md
     ├── quick-plan/SKILL.md

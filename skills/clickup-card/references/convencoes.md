@@ -67,11 +67,19 @@ Título: `<PREFIXO> <verbo no infinitivo + o quê>` — ex.: `[BACK-WEB] Expor e
 
 Back e front da mesma funcionalidade **sempre** ficam relacionados (ex.: back na WEB ↔ implementação no front da WEB).
 
+**Regra:** dependência ("aguardando") **só quando a task da qual se depende ainda não foi implementada** e o outro lado realmente não consegue começar sem ela. Em todos os outros casos, **link**.
+
+Por quê: no ClickUp, a task que "aguarda" fica marcada como **bloqueada até a outra chegar a `testado`/`upado`** — e esses status são do QA. Uma dependência com código já pronto deixa o board cheio de "bloqueado por dependência" por semanas sem nada bloquear de verdade.
+
 | Situação | Ferramenta | Tipo |
 |---|---|---|
-| Front não começa sem o endpoint/evento/campo que o back vai criar | `add_task_dependency` | front `waiting_on` back |
+| Front não começa sem o endpoint/evento/campo que o back **ainda vai criar** | `add_task_dependency` | front `waiting_on` back |
+| Mudança em `[CONTRATOS]` **ainda não feita** | `add_task_dependency` | back e front `waiting_on` contratos |
 | Mesma funcionalidade, dá para andar em paralelo (contrato já descrito) | `add_task_link` | link |
-| Mudança em `[CONTRATOS]` | `add_task_dependency` | back e front `waiting_on` contratos |
+| O lado do qual se depende **já está implementado** (mesmo que ainda não esteja na `dev`) | `add_task_link` | link |
+| Ordem entre backs que já aconteceu (registro histórico) | `add_task_link` | link |
+
+Quando a task que bloqueava fica pronta (PR aberto), **trocar a dependência por link** (`remove_task_dependency` + `add_task_link`) e ajustar a seção "Relações" da descrição.
 
 Toda subtask de front cita, na seção **Contrato**, exatamente o que consome — assim pode começar com dados fictícios.
 
@@ -101,7 +109,7 @@ Endpoints / eventos / DTOs que esta etapa expõe ou consome.
 - Dado ..., quando ..., então ...
 
 ## Relações
-- Aguarda: <link> · Relacionada: <link>
+- Aguarda: <link> (só se houver dependência real) · Relacionadas (link): <link>
 
 ## Testes esperados
 - caminho feliz · validações de entrada · falhas esperadas (not found, conflict, validation) · transação, quando houver

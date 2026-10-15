@@ -31,13 +31,24 @@ Quando o trabalho do card já foi feito (há plano em `/plans` com SPEC/PLAN/TAS
 - **Relações**: como o backend já existe, quase tudo é **link** (convenções, seção 4). Dependência só para o que de fato ainda não foi implementado.
 - **Anexos**: cada SPEC vai para a subtask da sua entrega, com nome que diga a entrega (`SPEC-entrega-1-pdv-local.md`), e cada guia de front vai para a subtask do front. Anexos antigos com nome genérico na task principal ficam (o conector não remove anexos) e o comentário de marco explica onde está cada coisa agora.
 
+### Modo módulo grande (card com BLOCOS)
+
+Quando a task principal tem subtasks `BLOCO NN — ...` (regra do time, convenções seção 3.1):
+
+- **Fase 0** igual; o material de cada BLOCO é o anexo ou a descrição dele.
+- **Fase 1** pode ser pulada se o BLOCO já traz escopo, regras e critérios: no lugar do brainstorm, uma análise do BLOCO contra o `/plans` e o código.
+- **Fase 2**: sem README novo na principal; o plano fica em `plans/<tema>/`.
+- **Fase 3**: divisão por BLOCO, em uma ou mais tasks de execução, cada uma com suas fases (`FASE A — <PREFIXO> ...`). O `SUBTASKS.md` segue essa árvore.
+- **Fase 4**: criar a task de execução na lista Tarefas **sem parent**, ligar ao BLOCO com `add_task_link` e criar as fases como subtasks dela. O comentário de marco vai no BLOCO. Status do BLOCO e da principal só com o OK do usuário.
+- **Fase 5**: executar uma fase = executar uma subtask; o status da task de execução segue a tabela das convenções (seção 2).
+
 ### Fase 0 — Ler o card
 
 1. Extrair o id do link (`/t/<id>` ou `/t/<workspace>/<id>`).
 2. `clickup_get_task` com `include: [description, subtasks, checklists, attachments, linked_tasks, dependencies, custom_fields]` e `expand_statuses: true`. Ler também os comentários (`clickup_get_task_comments`) e baixar anexos `.md` relevantes (`clickup_download_task_attachment`).
 3. Conferir e **parar** se: o card não estiver na lista Tarefas; o status for `a testar` ou além; o Pedro não for responsável e o card não tiver sido criado para ele (perguntar antes de seguir).
 4. Resumir no chat: título, autor, responsáveis, status, subtasks existentes, anexos, e o que o card pede em 3–5 linhas.
-5. **Card já tem subtasks ou README anexado?** → modo conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar).
+5. **Card já tem subtasks ou README anexado?** → modo conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar). Subtasks `BLOCO NN` → modo módulo grande.
 6. **Procurar cards relacionados fora da árvore:** abrir os `linked_tasks` do card e rodar `clickup_search` com 2–3 palavras-chave do tema (só `task`). Para cada card que trate da mesma funcionalidade (ex.: o front de outro dev criado em paralelo), mostrar no chat: título, responsável, status, se já começou (comentários, branch no repo) e **onde ele diverge** do que o card principal ou o README decidiram. Esse card nunca é editado; ele entra na divisão só como link com a subtask correspondente, e o alinhamento com o dono fica com o usuário.
 
 ### Fase 1 — Brainstorm

@@ -43,6 +43,8 @@ Os demais campos personalizados (Equipe Suporte, Grupo Vip, Avisado da att, Resp
 
 Ex.: backs em `pr git aguardando` + fronts em `pendente` → principal em `em andamento` (e não `pendente`: a regra antiga "acompanha a menos avançada" fazia a principal regredir).
 
+**Módulo grande (seção 3.1):** a mesma tabela vale para a task de execução, calculada a partir das fases. BLOCO e task principal são do autor do módulo: o status deles só muda com o OK do usuário.
+
 ---
 
 ## 3. Stacks e prefixos
@@ -61,6 +63,24 @@ Uma subtask = **uma stack, um repo, um PR**. O front do PDV é C# (Avalonia), ma
 
 Título: `<PREFIXO> <verbo no infinitivo + o quê>` — ex.: `[BACK-WEB] Expor endpoint de resposta da autorização`.
 
+### 3.1 Módulo grande: BLOCO → task de execução → fases
+
+Regra do time (15/10/2026) para módulos grandes:
+
+```text
+TASK PRINCIPAL           módulo / roadmap geral
+└─ subtask BLOCO         parte funcional permanente; fica sempre dentro da principal
+     ↔ link
+TASK DE EXECUÇÃO         task normal, sem parent, ligada ao BLOCO; é a implementação
+└─ subtasks FASE A, B…   plano técnico: cada fase = um repo, um PR
+```
+
+- Reconhece-se pelo card principal com subtasks `BLOCO NN — ...`. Nunca criar subtask por stack direto na principal nem dentro do BLOCO.
+- Task de execução: título `[BACKEND] <nome do bloco ou recorte>` ou `[FRONTEND] ...` (padrão do time), lista Tarefas, tags e campo Stack da stack, link com o BLOCO.
+- Fase: título `FASE A — <PREFIXO> <verbo + o quê>` (prefixo da tabela acima), descrição no modelo da seção 5.
+- Fase que é front (ex.: Terminal) não entra numa task `[BACKEND]`: vai para uma task `[FRONTEND]` própria, ligada ao mesmo BLOCO.
+- Um BLOCO pode ter mais de uma task de execução (ex.: pré-requisitos e entrega principal), todas ligadas a ele.
+
 ---
 
 ## 4. Relações entre subtasks
@@ -78,6 +98,9 @@ Por quê: no ClickUp, a task que "aguarda" fica marcada como **bloqueada até a 
 | Mesma funcionalidade, dá para andar em paralelo (contrato já descrito) | `add_task_link` | link |
 | O lado do qual se depende **já está implementado** (mesmo que ainda não esteja na `dev`) | `add_task_link` | link |
 | Ordem entre backs que já aconteceu (registro histórico) | `add_task_link` | link |
+| Task de execução ↔ seu BLOCO (módulo grande) | `add_task_link` | link, sempre |
+
+No módulo grande, a regra vale entre fases e entre tasks de execução; o BLOCO nunca recebe dependência.
 
 Quando a task que bloqueava fica pronta (PR aberto), **trocar a dependência por link** (`remove_task_dependency` + `add_task_link`) e ajustar a seção "Relações" da descrição.
 
@@ -95,6 +118,7 @@ Uma ou duas frases: o que esta etapa entrega.
 
 ## Contexto
 Task principal: <link> · README: anexo da task principal
+(módulo grande: Task de execução: <link> · BLOCO: <link>)
 
 ## Escopo
 - ...
@@ -137,6 +161,7 @@ Vai **no fim** da descrição (task principal e subtasks), sempre como última s
 |---|---|
 | README anexado | `README da entrega anexado (v<n>). Plano em plans/<tema>/<slug>/.` |
 | Subtasks criadas | `Subtasks criadas: <lista com prefixo>. Relações: <resumo>.` |
+| Task de execução criada (no BLOCO) | `Execução em <link da task>, fases: <A, B, C…>.` |
 | README mudou | `README atualizado para v<n>: <o que mudou em uma linha>.` |
 | PR aberto | `PR aberto: <link>.` |
 | Bloqueio | `Parado: <motivo>. Destrava quando <condição>.` |
@@ -150,10 +175,10 @@ Nunca comentar por commit. `notify_all` sempre `false`.
 
 1. **Gate antes de escrever:** divisão e textos aparecem no chat (e em `SUBTASKS.md`) e só vão ao ClickUp com "ok" explícito.
 2. **Tamanho:** subtask que passaria de ~8 tasks no quick-plan → dividir.
-3. **Limite:** até ~6–8 subtasks por task principal; acima disso, propor quebrar o card principal (sugestão para quem criou o card).
+3. **Limite:** até ~6–8 subtasks por task principal; acima disso, propor quebrar o card principal (sugestão para quem criou o card). No módulo grande: até ~6 fases por task de execução; acima disso, outra task de execução ligada ao mesmo BLOCO.
 4. **Card de outra pessoa:** descrição original nunca é reescrita — README entra como anexo, e só o bloco de acompanhamento é acrescentado no fim.
 5. **Não duplicar:** se o card já tem subtasks, conciliar com o que existe. Card de outra pessoa sobre a mesma funcionalidade (fora da árvore) é mostrado com as divergências e ligado por link; a subtask própria só é criada com o OK do usuário.
-6. **Responsáveis:** subtasks nascem **sem responsável**. O Pedro entra como responsável só quando começar a executar aquela subtask.
+6. **Responsáveis:** subtasks, tasks de execução e fases nascem **sem responsável**. O Pedro entra como responsável só quando começar a executar aquela subtask.
 7. **README alterado:** anexar `README-v<n>.md` e comentar o que mudou.
 8. **Só escreve em:** tasks atribuídas ao Pedro ou criadas por este fluxo. Demais tasks: somente leitura.
 9. **Escrita:** português; termos técnicos explicados entre parênteses; nunca usar o símbolo de seção.

@@ -173,6 +173,31 @@ Uma ou duas frases, em linguagem de negócio.
 - multi_file_workflow: a descrição acima + a `SPEC.md` aprovada anexada na task, com nome que diga a task (`SPEC-tarefa-01-<tema>.md`). PLAN e TASKS ficam só no `/plans`.
 - A descrição continua terminando no bloco de acompanhamento (seção 6).
 
+### 5.2 Doc para o front da web
+
+Ao terminar uma task de back que tem task de front da web ligada. Curto (até ~50 linhas), em linguagem simples, em `plans/<tema>/<slug>/doc-front/<slug-da-task>.md`, anexado na task de front como `FRONT-<slug-da-task>.md`.
+
+```
+# <o que a tela faz, em uma linha>
+
+## O que implementar
+- Telas e ações, por cima, na ordem em que o usuário usa.
+
+## Endpoints
+| Método | Rota | Para quê | Permissão |
+|---|---|---|---|
+
+Exemplo de resposta só dos endpoints principais (JSON curto).
+
+## Regras que a tela precisa respeitar
+- Estados, botões que aparecem por estado, mensagens de erro esperadas (400/403/409).
+
+## Pontos de atenção
+- O que o usuário pediu para acrescentar.
+```
+
+Anexar e comentar na task de front é a única escrita em task de outra pessoa, e só com o OK do usuário. Comentário: `Back pronto (<PR>). Guia do front anexado: FRONT-<slug>.md.`
+
 ---
 
 ## 6. Bloco de acompanhamento

@@ -38,7 +38,7 @@ Quando a task principal tem subtasks `BLOCO NN — ...` (regra do time, convenç
 - **Fase 0** igual; o material de cada BLOCO é o anexo ou a descrição dele.
 - **Fase 1** pode ser pulada se o BLOCO já traz escopo, regras e critérios: no lugar do brainstorm, uma análise do BLOCO contra o `/plans` e o código.
 - **Fase 2**: sem README novo na principal; o plano fica em `plans/<tema>/`.
-- **Fase 3**: divisão por BLOCO, em uma ou mais tasks de execução, cada uma com suas fases (`FASE A — <PREFIXO> ...`). O `SUBTASKS.md` segue essa árvore.
+- **Fase 3**: divisão por BLOCO em `PRÉ TAREFA NN` (pré-requisitos que não são escopo do BLOCO) e `TAREFA NN` (a entrega do BLOCO), cada uma com suas fases (`FASE A — <PREFIXO> ...`); convenções, seção 3.1. O `SUBTASKS.md` segue essa árvore.
 - **Fase 4**: criar a task de execução na lista Tarefas **sem parent**, ligar ao BLOCO com `add_task_link` e criar as fases como subtasks dela. O comentário de marco vai no BLOCO, e o link da execução entra no bloco de acompanhamento no fim da descrição do BLOCO. Status do BLOCO e da principal só com o OK do usuário.
 - **Fase 5**: executar uma fase = executar uma subtask; o status da task de execução segue a tabela das convenções (seção 2).
 

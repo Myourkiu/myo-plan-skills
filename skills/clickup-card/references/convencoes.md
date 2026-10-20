@@ -76,10 +76,11 @@ TASK DE EXECUÇÃO         task normal, sem parent, ligada ao BLOCO; é a implem
 ```
 
 - Reconhece-se pelo card principal com subtasks `BLOCO NN — ...`. Nunca criar subtask por stack direto na principal nem dentro do BLOCO.
-- Task de execução: título `[BACKEND] <nome do bloco ou recorte>` ou `[FRONTEND] ...` (padrão do time), lista Tarefas, tags e campo Stack da stack, link com o BLOCO.
+- Task de execução: título `TAREFA NN — [BACKEND] <nome do bloco ou recorte>` ou `TAREFA NN — [FRONTEND] ...` (padrão do time), lista Tarefas, tags e campo Stack da stack, link com o BLOCO. `NN` é a contagem dentro do BLOCO (01, 02…), não o número do BLOCO: quase sempre só existe a 01; BLOCO grande ou complexo se fragmenta em mais TAREFAs.
+- Pré-requisito: o que o BLOCO precisa mas não é o escopo dele (ex.: fundação de outra fase do plano) vira `PRÉ TAREFA NN — [BACKEND] ...`, com contagem própria, ligada ao mesmo BLOCO. Serve para a TAREFA não ficar inflada nem acumular entregas complexas que não são dela.
 - Fase: título `FASE A — <PREFIXO> <verbo + o quê>` (prefixo da tabela acima), descrição no modelo da seção 5.
 - Fase que é front (ex.: Terminal) não entra numa task `[BACKEND]`: vai para uma task `[FRONTEND]` própria, ligada ao mesmo BLOCO.
-- Um BLOCO pode ter mais de uma task de execução (ex.: pré-requisitos e entrega principal), todas ligadas a ele.
+- Um BLOCO pode ter várias PRÉ TAREFAs e TAREFAs, todas ligadas a ele.
 - Anexos: o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica anexado na task principal, com link no bloco de acompanhamento dela, e é reanexado quando muda; a SPEC de cada BLOCO, depois de aprovada, fica anexada no BLOCO (`SPEC-bloco-NN-<tema>.md`).
 - O link sozinho fica escondido nas relacionadas: ao criar a task de execução, acrescentar no fim da descrição do BLOCO o bloco de acompanhamento (seção 6) com `- Execução: <título> — <link> (fases A a X)`. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
 

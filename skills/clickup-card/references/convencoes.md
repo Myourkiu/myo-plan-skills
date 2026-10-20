@@ -80,6 +80,8 @@ TASK DE EXECUÇÃO         task normal, sem parent, ligada ao BLOCO; é a implem
 - Fase: título `FASE A — <PREFIXO> <verbo + o quê>` (prefixo da tabela acima), descrição no modelo da seção 5.
 - Fase que é front (ex.: Terminal) não entra numa task `[BACKEND]`: vai para uma task `[FRONTEND]` própria, ligada ao mesmo BLOCO.
 - Um BLOCO pode ter mais de uma task de execução (ex.: pré-requisitos e entrega principal), todas ligadas a ele.
+- Anexos: o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica anexado na task principal, com link no bloco de acompanhamento dela, e é reanexado quando muda; a SPEC de cada BLOCO, depois de aprovada, fica anexada no BLOCO (`SPEC-bloco-NN-<tema>.md`).
+- O link sozinho fica escondido nas relacionadas: ao criar a task de execução, acrescentar no fim da descrição do BLOCO o bloco de acompanhamento (seção 6) com `- Execução: <título> — <link> (fases A a X)`. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
 
 ---
 

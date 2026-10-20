@@ -105,6 +105,8 @@ Por quê: no ClickUp, a task que "aguarda" fica marcada como **bloqueada até a 
 
 No módulo grande, a regra vale entre fases e entre tasks de execução; o BLOCO nunca recebe dependência.
 
+**Dependência fica na fase, não na task inteira.** Quando uma TAREFA precisa de algo de uma PRÉ TAREFA (ou de outra TAREFA), a fase que precisa aguarda a fase exata que entrega aquilo. Ex.: `FASE C` da TAREFA 01 aguarda `FASE A` da PRÉ TAREFA 01 (o contrato), em vez de a TAREFA 01 inteira aguardar a PRÉ TAREFA 01 inteira. Assim as fases que não dependem de nada começam antes. Entre as duas tasks de execução fica só link.
+
 Quando a task que bloqueava fica pronta (PR aberto), **trocar a dependência por link** (`remove_task_dependency` + `add_task_link`) e ajustar a seção "Relações" da descrição.
 
 Toda subtask de front cita, na seção **Contrato**, exatamente o que consome — assim pode começar com dados fictícios.

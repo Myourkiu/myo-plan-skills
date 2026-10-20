@@ -81,7 +81,7 @@ TASK DE EXECUÇÃO         task normal, sem parent, ligada ao BLOCO; é a implem
 - Fase: título `FASE A — <PREFIXO> <verbo + o quê>` (prefixo da tabela acima), descrição no modelo da seção 5.
 - Fase que é front (ex.: Terminal) não entra numa task `[BACKEND]`: vai para uma task `[FRONTEND]` própria, ligada ao mesmo BLOCO.
 - Um BLOCO pode ter várias PRÉ TAREFAs e TAREFAs, todas ligadas a ele.
-- Anexos: o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica anexado na task principal, com link no bloco de acompanhamento dela, e é reanexado quando muda; a SPEC de cada BLOCO, depois de aprovada, fica anexada no BLOCO (`SPEC-bloco-NN-<tema>.md`).
+- Anexos: o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica anexado na task principal, com link no bloco de acompanhamento dela, e é reanexado quando muda; a SPEC, quando houver, fica anexada na própria task que foi planejada (seção 5.1).
 - O link sozinho fica escondido nas relacionadas: ao criar a task de execução, acrescentar no fim da descrição do BLOCO o bloco de acompanhamento (seção 6) com `- Execução: <título> — <link> (fases A a X)`. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
 
 ---
@@ -143,6 +143,35 @@ Endpoints / eventos / DTOs que esta etapa expõe ou consome.
 ## Testes esperados
 - caminho feliz · validações de entrada · falhas esperadas (not found, conflict, validation) · transação, quando houver
 ```
+
+### 5.1 Descrição depois do planejamento
+
+Quando a task (TAREFA, PRÉ TAREFA ou subtask) é planejada, a descrição passa a ser o **plano em alto nível**. Objetivo: quem gerencia o board entra na task e entende em segundos do que ela trata, sem abrir o repositório.
+
+```
+## Objetivo
+Uma ou duas frases, em linguagem de negócio.
+
+## Como vai ser feito
+- 3 a 6 itens: as etapas, na ordem, sem detalhe de código.
+
+## Fora de escopo
+- ...
+
+## Riscos e decisões
+- O que pode atrasar ou o que foi decidido no planejamento (só se houver).
+
+## Relações
+- Aguarda: <link> · Relacionadas (link): <link>
+
+## Documentos
+- SPEC: anexo `SPEC-<slug>.md` (só quando o planejamento usou o multi_file_workflow)
+- Plano detalhado: plans/<tema>/<slug>/
+```
+
+- quick-plan: só a descrição, sem anexo.
+- multi_file_workflow: a descrição acima + a `SPEC.md` aprovada anexada na task, com nome que diga a task (`SPEC-tarefa-01-<tema>.md`). PLAN e TASKS ficam só no `/plans`.
+- A descrição continua terminando no bloco de acompanhamento (seção 6).
 
 ---
 

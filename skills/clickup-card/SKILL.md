@@ -87,13 +87,14 @@ Gatilho: "começa a subtask X", link de subtask, ou continuação natural após 
 
 1. Ler a subtask. Ao começar: Pedro como responsável + status `em andamento` (um "ok" por subtask basta).
 2. Dimensionar a partir da descrição da subtask e invocar `quick-plan` (padrão) ou `multi_file_workflow`, passando a descrição como material da Fase 0 dela. O plano vai em `plans/<tema>/<slug>/<prefixo-da-subtask>/`.
-3. Durante a execução, atualizar só nos marcos (convenções, seção 7):
+3. Com o plano aprovado: reescrever a descrição da task com o plano em alto nível e, se foi `multi_file_workflow`, anexar a `SPEC.md` nela (convenções, seção 5.1). Mostrar o texto no chat antes de enviar.
+4. Durante a execução, atualizar só nos marcos (convenções, seção 7):
    - bloqueio → `parado` + comentário;
    - código pronto sem PR → `pr git aguardando`;
    - PR aberto → `pr git aberta` + link no bloco de acompanhamento da subtask + comentário; se outras subtasks "aguardam" esta, trocar a dependência por link;
    - fim de sessão → comentário de handoff (3 linhas).
-4. Após mudar o status de uma subtask, recalcular o da task principal pela tabela das convenções (seção 2), com teto em `pr git aberta`.
-5. Depois do merge, **não mexer mais**: o QA move de `a testar` em diante.
+5. Após mudar o status de uma subtask, recalcular o da task principal pela tabela das convenções (seção 2), com teto em `pr git aberta`.
+6. Depois do merge, **não mexer mais**: o QA move de `a testar` em diante.
 
 ## Regras de PARE
 

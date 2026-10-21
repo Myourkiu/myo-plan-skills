@@ -1,6 +1,6 @@
 ---
 name: clickup-card
-description: Use quando o usuário colar um link de card do ClickUp (app.clickup.com/t/...) ou pedir "/clickup-card <link>", "puxa o card", "começa a subtask", "atualiza o card", "abri o PR do card". Conduz o card de ponta a ponta — lê o card, faz o brainstorm-readme, anexa o README na task principal, divide em subtasks por stack (back/front/contratos) relacionadas entre si, e acompanha a execução de cada subtask atualizando status e comentários dentro das convenções do board. Exige o conector do ClickUp (ferramentas clickup_*).
+description: Use quando o usuário colar um link de card do ClickUp (app.clickup.com/t/...) ou pedir "/clickup-card <link>", "puxa o card", "começa a subtask", "atualiza o card", "abri o PR do card". Conduz o card de ponta a ponta — lê o card, faz o brainstorm-readme, anexa o README na task principal, divide em subtasks por stack ([WEB-BACKEND], [WEB-FRONTEND], [PDV]) relacionadas entre si (ou, em módulo grande, BLOCO → TAREFA por stack → fases, com branch intermediária por módulo), e acompanha a execução de cada subtask atualizando status e comentários dentro das convenções do board. Exige o conector do ClickUp (ferramentas clickup_*).
 ---
 
 # Card do ClickUp → entrega

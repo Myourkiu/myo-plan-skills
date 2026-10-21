@@ -67,7 +67,7 @@ Com o README aprovado e o "ok" para escrever no card:
 
 ### Fase 3 — Propor a divisão (GATE)
 
-1. Dividir por stack conforme as convenções (seções 3 e 4): uma subtask = uma stack, um repo, um PR. Ordem: `[CONTRATOS]` → back → front.
+1. Dividir por stack conforme as convenções (seções 3 e 4): uma subtask por stack (`[WEB-BACKEND]`, `[WEB-FRONTEND]`, `[PDV]`); subtask que mexe em mais de um repo ganha fases, uma por repo e PR. Ordem: fase de contrato → back → front.
 2. Escrever `plans/<tema>/<slug>/SUBTASKS.md` com, para cada subtask: título com prefixo, stack, repo, tags, relações (dependência ou link, e com quem) e a descrição completa no modelo da seção 5.
 3. Mostrar no chat uma tabela (título · stack · relações · objetivo em 1 linha) e anexar o `SUBTASKS.md` para leitura no celular.
 4. Checar limites: subtask que passaria de ~8 tasks → dividir; mais de ~8 subtasks → propor quebrar o card principal.
@@ -75,7 +75,7 @@ Com o README aprovado e o "ok" para escrever no card:
 
 ### Fase 4 — Criar no ClickUp
 
-1. Para cada subtask, na ordem do `SUBTASKS.md`: `clickup_create_task` com `parent` = id da task principal, `list_id` da lista Tarefas, `markdown_description`, `tags`, campo Stack, status `pendente`, **sem responsável**.
+1. Para cada subtask, na ordem do `SUBTASKS.md`: `clickup_create_task` com `parent` = id da task principal, `list_id` da lista Tarefas, `markdown_description`, `tags`, campo Stack, status `pendente`, **sem responsável**. Subtask com fases: criar as fases dentro dela (`parent` = a subtask).
 2. Criar as relações: `clickup_add_task_dependency` (`waiting_on`) só para quem depende de algo ainda não implementado; o resto com `clickup_add_task_link` (convenções, seção 4).
 3. Atualizar o `SUBTASKS.md` com o id e o link de cada subtask criada.
 4. Um único comentário na task principal: "Subtasks criadas".

@@ -49,19 +49,28 @@ Ex.: backs em `pr git aguardando` + fronts em `pendente` → principal em `em an
 
 ## 3. Stacks e prefixos
 
-Uma subtask = **uma stack, um repo, um PR**. O front do PDV é C# (Avalonia), mas é subtask de **front**, separada do back.
+Dois níveis de prefixo:
 
-| Prefixo | Repo | Stack | Tags |
+- **Stack**: a task que o board mostra por stack. São três: `[WEB-BACKEND]`, `[WEB-FRONTEND]` e `[PDV]`. O PDV é **uma stack só**, com servidor local (back) e Terminal (front) na mesma task, porque o front do PDV também é C# (Avalonia).
+- **Fase**: uma fase = **um repo, uma branch, um PR**. O prefixo diz o repo.
+
+| Stack | Fases que entram nela | Campo Stack | Tags |
 |---|---|---|---|
-| `[CONTRATOS]` | SgBR.Contracts / compartilhado | Backend | sgsuper, sgsuper-pdv, sgsuper-web |
-| `[BACK-PDV]` | servidor-pdv (ServidorPdv) | Backend | sgsuper, sgsuper-pdv |
-| `[FRONT-PDV]` | terminal (TerminalPdv, Avalonia) | Frontend | sgsuper, sgsuper-pdv |
-| `[BACK-WEB]` | web-backend | Backend | sgsuper, sgsuper-web |
-| `[FRONT-WEB]` | front da WEB (Vue) | Frontend | sgsuper, sgsuper-web |
+| `[WEB-BACKEND]` | `[CONTRATOS]`, `[BACK-WEB]` | Backend | sgsuper, sgsuper-web |
+| `[WEB-FRONTEND]` | `[FRONT-WEB]` | Frontend | sgsuper, sgsuper-web |
+| `[PDV]` | `[BACK-PDV]`, `[FRONT-PDV]` (e `[CONTRATOS]` quando só o PDV usa) | Backend e/ou Frontend, conforme as fases | sgsuper, sgsuper-pdv |
 
-`[CONTRATOS]` existe porque mudança de contrato mexe num repo que não é nem back nem front.
+| Prefixo de fase | Repo (`sgsuper/apps/...`) | Tags |
+|---|---|---|
+| `[CONTRATOS]` | contracts / compartilhado | sgsuper, sgsuper-pdv, sgsuper-web |
+| `[BACK-PDV]` | pdv/backend (ServidorPdv) | sgsuper, sgsuper-pdv |
+| `[FRONT-PDV]` | pdv/frontend (TerminalPdv, Avalonia) | sgsuper, sgsuper-pdv |
+| `[BACK-WEB]` | web/backend | sgsuper, sgsuper-web |
+| `[FRONT-WEB]` | web/frontend (Vue) | sgsuper, sgsuper-web |
 
-Título: `<PREFIXO> <verbo no infinitivo + o quê>` — ex.: `[BACK-WEB] Expor endpoint de resposta da autorização`.
+`[CONTRATOS]` é fase, não stack: entra na task da stack que consome o contrato primeiro (em geral `[WEB-BACKEND]`), e as fases que dependem dele aguardam essa fase (seção 4).
+
+**Card normal (sem BLOCO):** uma subtask por stack envolvida, título `<STACK> <verbo no infinitivo + o quê>` — ex.: `[WEB-BACKEND] Expor endpoint de resposta da autorização`. Subtask que mexe num repo só é um PR e não tem fases. Subtask que mexe em mais de um repo (o `[PDV]` com servidor e Terminal, ou um contrato novo) ganha fases dentro dela, uma por repo, no formato da seção 3.1.
 
 ### 3.1 Módulo grande: BLOCO → task de execução → fases
 
@@ -97,7 +106,7 @@ Por quê: no ClickUp, a task que "aguarda" fica marcada como **bloqueada até a 
 | Situação | Ferramenta | Tipo |
 |---|---|---|
 | Front não começa sem o endpoint/evento/campo que o back **ainda vai criar** | `add_task_dependency` | front `waiting_on` back |
-| Mudança em `[CONTRATOS]` **ainda não feita** | `add_task_dependency` | back e front `waiting_on` contratos |
+| Fase `[CONTRATOS]` **ainda não feita** | `add_task_dependency` | fases de back e front `waiting_on` a fase de contrato |
 | Mesma funcionalidade, dá para andar em paralelo (contrato já descrito) | `add_task_link` | link |
 | O lado do qual se depende **já está implementado** (mesmo que ainda não esteja na `dev`) | `add_task_link` | link |
 | Ordem entre backs que já aconteceu (registro histórico) | `add_task_link` | link |

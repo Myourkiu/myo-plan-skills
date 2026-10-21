@@ -43,7 +43,7 @@ Os demais campos personalizados (Equipe Suporte, Grupo Vip, Avisado da att, Resp
 
 Ex.: backs em `pr git aguardando` + fronts em `pendente` → principal em `em andamento` (e não `pendente`: a regra antiga "acompanha a menos avançada" fazia a principal regredir).
 
-**Módulo grande (seção 3.1):** a mesma tabela vale em cada nível — a PRÉ TAREFA a partir das fases dela, a TAREFA a partir das fases e PRÉ TAREFAs dela, o BLOCO a partir das TAREFAs. BLOCO e épico são do autor do módulo: o status deles só muda com o OK do usuário.
+**Módulo grande (seção 3.1):** a mesma tabela vale em cada nível — a PRÉ TAREFA a partir das fases dela, a TAREFA a partir das fases e PRÉ TAREFAs dela, o BLOCO a partir das TAREFAs. BLOCO e épico são do autor do módulo: o status deles só muda com o OK do usuário. Status da fase com branch base: seção 3.2.
 
 ---
 
@@ -99,7 +99,33 @@ Molde: `[FINANCEIRO] BLOCO 01 — Prestação de contas da Filial à Matriz` (21
 - **Fase:** título `FASE A — <PREFIXO> <verbo + o quê>`, subtask da TAREFA ou da PRÉ TAREFA, descrição no modelo da seção 5. As letras recomeçam em cada TAREFA e PRÉ TAREFA.
 - **Nunca** criar task de stack direto no épico, na REF ou fora do BLOCO.
 - **Anexos:** o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica no épico e é reanexado quando muda; as regras do bloco ficam no `[MÓDULO] BLOCO` (anexo do autor); a SPEC, quando houver, fica na task planejada (seção 5.1).
-- **Acompanhamento do BLOCO:** a árvore já mostra as TAREFAs, então o bloco de acompanhamento do BLOCO (seção 6) leva só o plano. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
+- **Acompanhamento do BLOCO:** a árvore já mostra as TAREFAs, então o bloco de acompanhamento do BLOCO (seção 6) leva só o plano, a branch base e o PR base→`dev`. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
+
+### 3.2 Branches do módulo grande
+
+Ao identificar um módulo grande, **sugerir** este fluxo ao usuário. Se a branch base já existe no repo, usar; se não, propor criar a partir da `dev`.
+
+```text
+dev
+└─ feature/<módulo>                          branch base (intermediária), criada a partir da dev
+   ├─ feature/<módulo>-b01-pt01-fase-a       PR → feature/<módulo>
+   ├─ feature/<módulo>-b01-t01-fase-a        PR → feature/<módulo>
+   └─ …
+feature/<módulo>                             PR → dev quando o usuário decidir (fim do BLOCO ou de um recorte)
+```
+
+- **Uma branch por fase**, a partir da base, com PR para a base (nunca direto para a `dev`). As letras das fases recomeçam em cada TAREFA, então o nome leva o BLOCO e a task: `b01` = BLOCO 01, `t01` = TAREFA 01, `pt01` = PRÉ TAREFA 01. Ex.: `feature/financeiro-b01-t01-fase-a`.
+- A base existe em cada repo que o módulo toca (contracts, pdv/backend, web/backend…); a branch da fase nasce no repo da fase.
+- **Antes de começar cada fase**, no repo dela, conferir se a `dev` andou:
+
+  ```bash
+  git fetch origin
+  git log --oneline origin/feature/<módulo>..origin/dev
+  ```
+
+  Saída vazia → criar a branch da fase. Com commits → atualizar a base antes: `git switch feature/<módulo>`, `git pull --ff-only`, `git merge origin/dev` (merge, nunca rebase: QA e front usam a base), resolver conflitos, rodar build e testes, mostrar no chat o que entrou e só com o ok fazer o `git push`. Depois criar a branch da fase a partir da base atualizada.
+- **Por quê:** o QA testa na base o que já está estável enquanto as próximas fases andam, e o front integra o que já está na base sem esperar o módulo inteiro.
+- **Status da fase:** código pronto sem PR → `pr git aguardando`; PR para a base aberto → `pr git aberta`; mergeado na base → continua `pr git aberta` (teto do dev: o QA testa na base e move dali em diante).
 
 ---
 
@@ -225,9 +251,11 @@ Vai **no fim** da descrição (task principal e subtasks), sempre como última s
 ---
 ## Acompanhamento (dev)
 - Plano: plans/<tema>/<slug>/
-- Branch: <nome>
+- Branch: <nome> → <base> (módulo grande: a branch da fase → feature/<módulo>)
 - PRs: <links>
 ```
+
+No `[MÓDULO] BLOCO`: só `Plano`, `Branch base: feature/<módulo> (a partir da dev)` e `PR base → dev: <link ou —>`. É onde o QA vê em qual branch testar.
 
 ---
 
@@ -237,7 +265,7 @@ Vai **no fim** da descrição (task principal e subtasks), sempre como última s
 |---|---|
 | README anexado | `README da entrega anexado (v<n>). Plano em plans/<tema>/<slug>/.` |
 | Subtasks criadas | `Subtasks criadas: <lista com prefixo>. Relações: <resumo>.` |
-| TAREFAs criadas (no BLOCO) | `TAREFAs criadas: <lista com prefixo e fases>.` |
+| TAREFAs criadas (no BLOCO) | `TAREFAs criadas: <lista com prefixo e fases>. Branch base: feature/<módulo>.` |
 | README mudou | `README atualizado para v<n>: <o que mudou em uma linha>.` |
 | PR aberto | `PR aberto: <link>.` |
 | Bloqueio | `Parado: <motivo>. Destrava quando <condição>.` |

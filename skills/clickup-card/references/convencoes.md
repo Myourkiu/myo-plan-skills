@@ -86,7 +86,7 @@ Molde: `[FINANCEIRO] BLOCO 01 — Prestação de contas da Filial à Matriz` (21
 │  ├─ PRÉ TAREFA NN — [BACKEND] <o quê>    pré-requisito, dentro da TAREFA que depende dele
 │  │  └─ FASE A, B… — <PREFIXO> <verbo + o quê>
 │  └─ FASE A, B… — <PREFIXO> <verbo + o quê>
-├─ [WEB-FRONTEND] TAREFA NN — <nome>       front da web (outro dev)
+├─ [WEB-FRONTEND] TAREFA NN — <nome>       front da web (outro dev); recebe o handoff por fase (seção 5.2)
 └─ [PDV] TAREFA NN — <nome>                servidor local e Terminal na mesma TAREFA
    └─ FASE A, B… — [BACK-PDV] / [FRONT-PDV] <verbo + o quê>
 ```
@@ -124,7 +124,7 @@ feature/<módulo>                             PR → dev quando o usuário decid
   ```
 
   Saída vazia → criar a branch da fase. Com commits → atualizar a base antes: `git switch feature/<módulo>`, `git pull --ff-only`, `git merge origin/dev` (merge, nunca rebase: QA e front usam a base), resolver conflitos, rodar build e testes, mostrar no chat o que entrou e só com o ok fazer o `git push`. Depois criar a branch da fase a partir da base atualizada.
-- **Por quê:** o QA testa na base o que já está estável enquanto as próximas fases andam, e o front integra o que já está na base sem esperar o módulo inteiro.
+- **Por quê:** o QA testa na base o que já está estável enquanto as próximas fases andam, e o front integra o que já está na base sem esperar o módulo inteiro (seção 5.2).
 - **Status da fase:** código pronto sem PR → `pr git aguardando`; PR para a base aberto → `pr git aberta`; mergeado na base → continua `pr git aberta` (teto do dev: o QA testa na base e move dali em diante).
 
 ---
@@ -216,30 +216,35 @@ Uma ou duas frases, em linguagem de negócio.
 - multi_file_workflow: a descrição acima + a `SPEC.md` aprovada anexada na task, com nome que diga a task (`SPEC-tarefa-01-<tema>.md`). PLAN e TASKS ficam só no `/plans`.
 - A descrição continua terminando no bloco de acompanhamento (seção 6).
 
-### 5.2 Doc para o front da web
+### 5.2 Handoff para o front da web (por fase)
 
-Ao terminar uma task de back que tem task de front da web ligada. Curto (até ~50 linhas), em linguagem simples, em `plans/<tema>/<slug>/doc-front/<slug-da-task>.md`, anexado na task de front como `FRONT-<slug-da-task>.md`.
+**Quando:** ao fim de cada fase de back (de TAREFA ou PRÉ TAREFA) que entrou na branch base (seção 3.2) — ou na `dev`, fora do módulo grande —, se existe task `[WEB-FRONTEND]` ligada e o que a fase entregou **funciona sozinho**: o front consegue integrar sem esperar fase ainda em andamento. Ex.: FASE A (buscar usuário) na base e FASE B (editar usuário) em andamento — a A não depende da B, então o front já integra a A. Fase que só faz sentido junto com a próxima fica sem handoff, e ele sai com a fase que fecha o recorte.
+
+**Onde:** na descrição da task `[WEB-FRONTEND]`, na seção `## Pronto para integrar`, no fim da descrição (antes do bloco de acompanhamento, se houver). Uma subseção por fase, a mais nova embaixo. A descrição é de outra pessoa: reler na hora e reenviar o texto dela intacto, só com a seção acrescentada ou atualizada.
+
+**Modelo** (breve, até ~20 linhas por fase, em alto nível):
 
 ```
-# <o que a tela faz, em uma linha>
+## Pronto para integrar
 
-## O que implementar
-- Telas e ações, por cima, na ordem em que o usuário usa.
+### FASE A — <o que ficou pronto, em uma linha>
+Branch: feature/<módulo> · PR: <link>
 
-## Endpoints
-| Método | Rota | Para quê | Permissão |
-|---|---|---|---|
+O que já dá para fazer
+- 2 a 4 itens: a tela ou ação e o que o back já resolve.
 
-Exemplo de resposta só dos endpoints principais (JSON curto).
+Endpoints
+| Método | Rota | Para quê |
+|---|---|---|
 
-## Regras que a tela precisa respeitar
-- Estados, botões que aparecem por estado, mensagens de erro esperadas (400/403/409).
+Ainda não disponível
+- O que depende de fase em andamento (ex.: editar usuário — FASE B).
 
-## Pontos de atenção
-- O que o usuário pediu para acrescentar.
+Sugestões
+- Só o que o usuário pedir para incluir (libs, convenções).
 ```
 
-Anexar e comentar na task de front é a única escrita em task de outra pessoa, e só com o OK do usuário. Comentário: `Back pronto (<PR>). Guia do front anexado: FRONT-<slug>.md.`
+Mostrar o texto no chat e **perguntar ao usuário se há sugestões (libs, convenções) para incluir** — quem dá as sugestões é ele; nunca inventar. Só com o OK, atualizar a descrição e comentar na task de front (seção 7). É a única escrita em task de outra pessoa.
 
 ---
 
@@ -266,6 +271,7 @@ No `[MÓDULO] BLOCO`: só `Plano`, `Branch base: feature/<módulo> (a partir da 
 | README anexado | `README da entrega anexado (v<n>). Plano em plans/<tema>/<slug>/.` |
 | Subtasks criadas | `Subtasks criadas: <lista com prefixo>. Relações: <resumo>.` |
 | TAREFAs criadas (no BLOCO) | `TAREFAs criadas: <lista com prefixo e fases>. Branch base: feature/<módulo>.` |
+| Handoff do front (na task de front) | `FASE <X> na feature/<módulo>: já dá para integrar <resumo>. Detalhes em "Pronto para integrar" na descrição.` |
 | README mudou | `README atualizado para v<n>: <o que mudou em uma linha>.` |
 | PR aberto | `PR aberto: <link>.` |
 | Bloqueio | `Parado: <motivo>. Destrava quando <condição>.` |

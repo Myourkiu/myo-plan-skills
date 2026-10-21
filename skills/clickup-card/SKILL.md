@@ -98,7 +98,7 @@ Gatilho: "começa a subtask X", link de subtask, ou continuação natural após 
    - PR aberto (no módulo grande, da fase para a base) → `pr git aberta` + link no bloco de acompanhamento da subtask + comentário; se outras fases "aguardam" esta, trocar a dependência por link;
    - fim de sessão → comentário de handoff (3 linhas).
 6. Após mudar o status de uma subtask, recalcular o das tasks acima pela tabela das convenções (seção 2), com teto em `pr git aberta`: a task principal, ou, no módulo grande, PRÉ TAREFA → TAREFA → BLOCO (este só com o OK).
-7. **Fim de uma task de back com front da web ligado** (task `[FRONTEND]` da web, em geral da Bruna): escrever um doc mínimo para o front (convenções, seção 5.2), mostrar no chat e **perguntar ao usuário se há algo importante a acrescentar para quem faz o front**. Só depois, com o OK, anexar o doc na task de front e comentar nela.
+7. **Fim de uma fase de back com `[WEB-FRONTEND]` ligado** (em geral da Bruna): se o que a fase entregou funciona sozinho — o front integra sem esperar as fases ainda em andamento —, escrever a seção "Pronto para integrar" da task de front (convenções, seção 5.2): em alto nível, o que já dá para fazer e os endpoints disponíveis na branch base. Mostrar no chat e **perguntar ao usuário se há sugestões (libs, convenções) para incluir**. Só com o OK, atualizar a descrição da task de front e comentar nela. Fase que depende da próxima → sem handoff agora; ele sai com a fase que fecha o recorte.
 8. Depois do merge, **não mexer mais no status**: o QA move de `a testar` em diante (no módulo grande, testando na branch base).
 
 ## Regras de PARE

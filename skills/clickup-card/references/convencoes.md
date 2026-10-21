@@ -43,7 +43,7 @@ Os demais campos personalizados (Equipe Suporte, Grupo Vip, Avisado da att, Resp
 
 Ex.: backs em `pr git aguardando` + fronts em `pendente` → principal em `em andamento` (e não `pendente`: a regra antiga "acompanha a menos avançada" fazia a principal regredir).
 
-**Módulo grande (seção 3.1):** a mesma tabela vale para a task de execução, calculada a partir das fases. BLOCO e task principal são do autor do módulo: o status deles só muda com o OK do usuário.
+**Módulo grande (seção 3.1):** a mesma tabela vale em cada nível — a PRÉ TAREFA a partir das fases dela, a TAREFA a partir das fases e PRÉ TAREFAs dela, o BLOCO a partir das TAREFAs. BLOCO e épico são do autor do módulo: o status deles só muda com o OK do usuário.
 
 ---
 
@@ -72,26 +72,34 @@ Dois níveis de prefixo:
 
 **Card normal (sem BLOCO):** uma subtask por stack envolvida, título `<STACK> <verbo no infinitivo + o quê>` — ex.: `[WEB-BACKEND] Expor endpoint de resposta da autorização`. Subtask que mexe num repo só é um PR e não tem fases. Subtask que mexe em mais de um repo (o `[PDV]` com servidor e Terminal, ou um contrato novo) ganha fases dentro dela, uma por repo, no formato da seção 3.1.
 
-### 3.1 Módulo grande: BLOCO → task de execução → fases
+### 3.1 Módulo grande: épico → BLOCO → TAREFA por stack → fases
 
-Regra do time (15/10/2026) para módulos grandes:
+Molde: `[FINANCEIRO] BLOCO 01 — Prestação de contas da Filial à Matriz` (21/10/2026). É o BLOCO mais complexo do Financeiro, com PRÉ TAREFAs, por isso serve de referência para todos.
 
 ```text
-TASK PRINCIPAL           módulo / roadmap geral
-└─ subtask BLOCO         parte funcional permanente; fica sempre dentro da principal
-     ↔ link
-TASK DE EXECUÇÃO         task normal, sem parent, ligada ao BLOCO; é a implementação
-└─ subtasks FASE A, B…   plano técnico: cada fase = um repo, um PR
+[EPIC] Módulo <X>                          task principal: roadmap e anexos do módulo (do autor)
+├─ REF — BLOCO NN — <nome>                 só referência: link para o BLOCO; nunca escrever aqui
+└─ BLOCO NN — <nome>                       item do roadmap que ainda não virou task própria
+
+[<MÓDULO>] BLOCO NN — <nome>               task sem parent na lista Tarefas; regras do bloco no anexo do autor
+├─ [WEB-BACKEND] TAREFA NN — <nome>        uma subtask por stack
+│  ├─ PRÉ TAREFA NN — [BACKEND] <o quê>    pré-requisito, dentro da TAREFA que depende dele
+│  │  └─ FASE A, B… — <PREFIXO> <verbo + o quê>
+│  └─ FASE A, B… — <PREFIXO> <verbo + o quê>
+├─ [WEB-FRONTEND] TAREFA NN — <nome>       front da web (outro dev)
+└─ [PDV] TAREFA NN — <nome>                servidor local e Terminal na mesma TAREFA
+   └─ FASE A, B… — [BACK-PDV] / [FRONT-PDV] <verbo + o quê>
 ```
 
-- Reconhece-se pelo card principal com subtasks `BLOCO NN — ...`. Nunca criar subtask por stack direto na principal nem dentro do BLOCO.
-- Task de execução: título `TAREFA NN — [BACKEND] <nome do bloco ou recorte>` ou `TAREFA NN — [FRONTEND] ...` (padrão do time), lista Tarefas, tags e campo Stack da stack, link com o BLOCO. `NN` é a contagem dentro do BLOCO (01, 02…), não o número do BLOCO: quase sempre só existe a 01; BLOCO grande ou complexo se fragmenta em mais TAREFAs.
-- Pré-requisito: o que o BLOCO precisa mas não é o escopo dele (ex.: fundação de outra fase do plano) vira `PRÉ TAREFA NN — [BACKEND] ...`, com contagem própria, ligada ao mesmo BLOCO. Serve para a TAREFA não ficar inflada nem acumular entregas complexas que não são dela.
-- Fase: título `FASE A — <PREFIXO> <verbo + o quê>` (prefixo da tabela acima), descrição no modelo da seção 5.
-- Fase que é front (ex.: Terminal) não entra numa task `[BACKEND]`: vai para uma task `[FRONTEND]` própria, ligada ao mesmo BLOCO.
-- Um BLOCO pode ter várias PRÉ TAREFAs e TAREFAs, todas ligadas a ele.
-- Anexos: o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica anexado na task principal, com link no bloco de acompanhamento dela, e é reanexado quando muda; a SPEC, quando houver, fica anexada na própria task que foi planejada (seção 5.1).
-- O link sozinho fica escondido nas relacionadas: ao criar a task de execução, acrescentar no fim da descrição do BLOCO o bloco de acompanhamento (seção 6) com `- Execução: <título> — <link> (fases A a X)`. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
+- **Como reconhecer:** link de um `[MÓDULO] BLOCO NN`, de uma subtask do épico (`BLOCO NN` ou `REF — BLOCO NN`) ou de qualquer task dessa árvore.
+- **REF:** os primeiros BLOCOs refatorados ficaram com uma subtask `REF — BLOCO NN` no épico; o certo seria ter só o BLOCO. A REF é um ponteiro: abrir os `linked_tasks` dela e trabalhar no `[MÓDULO] BLOCO NN`. Nunca escrever na REF nem criar nada no épico.
+- **BLOCO ainda sem task própria** (subtask do épico sem `[MÓDULO] BLOCO` ligado): mostrar e perguntar ao usuário se cria no molde (task sem parent na lista Tarefas, nome com o prefixo do módulo, link com a subtask do épico) ou se espera o autor do módulo.
+- **TAREFA:** título `<STACK> TAREFA NN — <nome do BLOCO ou recorte>`, subtask do BLOCO, tags e campo Stack da stack (seção 3). `NN` conta por stack dentro do BLOCO: quase sempre só existe a 01; BLOCO grande demais para uma TAREFA da mesma stack se fragmenta em TAREFA 02, 03… Fases só da própria stack (tabela da seção 3).
+- **PRÉ TAREFA:** o que o BLOCO precisa mas não é escopo dele (ex.: fundação de outra fase do roadmap). Título `PRÉ TAREFA NN — [BACKEND] <o quê>`, contagem própria no BLOCO, subtask da TAREFA que depende dela. Serve para a TAREFA não ficar inflada nem acumular entregas que não são dela. Por ser fundação, pode ter fases de mais de um repo de back (`[CONTRATOS]`, `[BACK-PDV]`, `[BACK-WEB]`).
+- **Fase:** título `FASE A — <PREFIXO> <verbo + o quê>`, subtask da TAREFA ou da PRÉ TAREFA, descrição no modelo da seção 5. As letras recomeçam em cada TAREFA e PRÉ TAREFA.
+- **Nunca** criar task de stack direto no épico, na REF ou fora do BLOCO.
+- **Anexos:** o roadmap do módulo (ex.: `FASES-<módulo>.md`) fica no épico e é reanexado quando muda; as regras do bloco ficam no `[MÓDULO] BLOCO` (anexo do autor); a SPEC, quando houver, fica na task planejada (seção 5.1).
+- **Acompanhamento do BLOCO:** a árvore já mostra as TAREFAs, então o bloco de acompanhamento do BLOCO (seção 6) leva só o plano. A descrição do BLOCO é do autor: reler na hora e reenviar o texto dele intacto, só com o bloco no fim.
 
 ---
 
@@ -110,11 +118,11 @@ Por quê: no ClickUp, a task que "aguarda" fica marcada como **bloqueada até a 
 | Mesma funcionalidade, dá para andar em paralelo (contrato já descrito) | `add_task_link` | link |
 | O lado do qual se depende **já está implementado** (mesmo que ainda não esteja na `dev`) | `add_task_link` | link |
 | Ordem entre backs que já aconteceu (registro histórico) | `add_task_link` | link |
-| Task de execução ↔ seu BLOCO (módulo grande) | `add_task_link` | link, sempre |
+| TAREFAs de stack do mesmo BLOCO entre si (`[WEB-BACKEND]` ↔ `[WEB-FRONTEND]` ↔ `[PDV]`) | `add_task_link` | link, sempre |
 
-No módulo grande, a regra vale entre fases e entre tasks de execução; o BLOCO nunca recebe dependência.
+No módulo grande, a hierarquia (BLOCO → TAREFA → PRÉ TAREFA → fase) já mostra quem é de quem: sem link entre pai e filha. A regra de dependência vale entre fases; BLOCO, TAREFA e PRÉ TAREFA nunca recebem dependência.
 
-**Dependência fica na fase, não na task inteira.** Quando uma TAREFA precisa de algo de uma PRÉ TAREFA (ou de outra TAREFA), a fase que precisa aguarda a fase exata que entrega aquilo. Ex.: `FASE C` da TAREFA 01 aguarda `FASE A` da PRÉ TAREFA 01 (o contrato), em vez de a TAREFA 01 inteira aguardar a PRÉ TAREFA 01 inteira. Assim as fases que não dependem de nada começam antes. Entre as duas tasks de execução fica só link.
+**Dependência fica na fase, não na task inteira.** Quando uma TAREFA precisa de algo de uma PRÉ TAREFA (ou de outra TAREFA), a fase que precisa aguarda a fase exata que entrega aquilo. Ex.: `FASE C` da TAREFA 01 aguarda `FASE A` da PRÉ TAREFA 01 (o contrato), em vez de a TAREFA 01 inteira aguardar a PRÉ TAREFA 01 inteira. Assim as fases que não dependem de nada começam antes.
 
 Quando a task que bloqueava fica pronta (PR aberto), **trocar a dependência por link** (`remove_task_dependency` + `add_task_link`) e ajustar a seção "Relações" da descrição.
 
@@ -132,7 +140,7 @@ Uma ou duas frases: o que esta etapa entrega.
 
 ## Contexto
 Task principal: <link> · README: anexo da task principal
-(módulo grande: Task de execução: <link> · BLOCO: <link>)
+(módulo grande: BLOCO: <link do [MÓDULO] BLOCO> · TAREFA: <link> · Épico: <link>)
 
 ## Escopo
 - ...
@@ -229,7 +237,7 @@ Vai **no fim** da descrição (task principal e subtasks), sempre como última s
 |---|---|
 | README anexado | `README da entrega anexado (v<n>). Plano em plans/<tema>/<slug>/.` |
 | Subtasks criadas | `Subtasks criadas: <lista com prefixo>. Relações: <resumo>.` |
-| Task de execução criada (no BLOCO) | `Execução em <link da task>, fases: <A, B, C…>.` |
+| TAREFAs criadas (no BLOCO) | `TAREFAs criadas: <lista com prefixo e fases>.` |
 | README mudou | `README atualizado para v<n>: <o que mudou em uma linha>.` |
 | PR aberto | `PR aberto: <link>.` |
 | Bloqueio | `Parado: <motivo>. Destrava quando <condição>.` |
@@ -243,10 +251,10 @@ Nunca comentar por commit. `notify_all` sempre `false`.
 
 1. **Gate antes de escrever:** divisão e textos aparecem no chat (e em `SUBTASKS.md`) e só vão ao ClickUp com "ok" explícito.
 2. **Tamanho:** subtask que passaria de ~8 tasks no quick-plan → dividir.
-3. **Limite:** até ~6–8 subtasks por task principal; acima disso, propor quebrar o card principal (sugestão para quem criou o card). No módulo grande: até ~6 fases por task de execução; acima disso, outra task de execução ligada ao mesmo BLOCO.
+3. **Limite:** até ~6–8 subtasks por task principal; acima disso, propor quebrar o card principal (sugestão para quem criou o card). No módulo grande: até ~6 fases por TAREFA; acima disso, o que é pré-requisito vira PRÉ TAREFA e o resto vira TAREFA 02 da mesma stack, dentro do mesmo BLOCO.
 4. **Card de outra pessoa:** descrição original nunca é reescrita — README entra como anexo, e só o bloco de acompanhamento é acrescentado no fim.
 5. **Não duplicar:** se o card já tem subtasks, conciliar com o que existe. Card de outra pessoa sobre a mesma funcionalidade (fora da árvore) é mostrado com as divergências e ligado por link; a subtask própria só é criada com o OK do usuário.
-6. **Responsáveis:** subtasks, tasks de execução e fases nascem **sem responsável**. O Pedro entra como responsável só quando começar a executar aquela subtask.
+6. **Responsáveis:** subtasks, TAREFAs, PRÉ TAREFAs e fases nascem **sem responsável**. O Pedro entra como responsável só quando começar a executar aquela subtask.
 7. **README alterado:** anexar `README-v<n>.md` e comentar o que mudou.
 8. **Só escreve em:** tasks atribuídas ao Pedro ou criadas por este fluxo. Demais tasks: somente leitura.
 9. **Escrita:** português; termos técnicos explicados entre parênteses; nunca usar o símbolo de seção.

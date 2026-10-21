@@ -31,16 +31,18 @@ Quando o trabalho do card já foi feito (há plano em `/plans` com SPEC/PLAN/TAS
 - **Relações**: como o backend já existe, quase tudo é **link** (convenções, seção 4). Dependência só para o que de fato ainda não foi implementado.
 - **Anexos**: cada SPEC vai para a subtask da sua entrega, com nome que diga a entrega (`SPEC-entrega-1-pdv-local.md`), e cada guia de front vai para a subtask do front. Anexos antigos com nome genérico na task principal ficam (o conector não remove anexos) e o comentário de marco explica onde está cada coisa agora.
 
-### Modo módulo grande (card com BLOCOS)
+### Modo módulo grande (épico com BLOCOs)
 
-Quando a task principal tem subtasks `BLOCO NN — ...` (regra do time, convenções seção 3.1):
+Quando o link é de um `[MÓDULO] BLOCO NN`, de uma subtask `BLOCO NN` / `REF — BLOCO NN` de um épico, ou de qualquer task dessa árvore. Molde: o BLOCO 01 do Financeiro (convenções, seção 3.1): `[MÓDULO] BLOCO NN` sem parent → uma `TAREFA` por stack (`[WEB-BACKEND]`, `[WEB-FRONTEND]`, `[PDV]`) → PRÉ TAREFAs dentro da TAREFA que depende delas → fases.
 
-- **Fase 0** igual; o material de cada BLOCO é o anexo ou a descrição dele. Abrir os `linked_tasks` do BLOCO: PRÉ TAREFAs e TAREFAs que o autor já criou (mesmo vazias) entram na divisão como estão, para serem preenchidas, nunca duplicadas. As de outra pessoa (não atribuídas ao Pedro) ficam só como link.
+- **Fase 0** igual, mais:
+  - link de `REF — BLOCO NN` (ou da subtask do épico) → abrir os `linked_tasks` e seguir para o `[MÓDULO] BLOCO NN`; a REF é só ponteiro, nunca recebe escrita. Sem BLOCO ligado → perguntar se cria no molde ou espera o autor.
+  - o material do BLOCO é o anexo ou a descrição dele. Abrir as subtasks: TAREFAs, PRÉ TAREFAs e fases que já existem (mesmo vazias) entram na divisão como estão, para serem preenchidas, nunca duplicadas. As de outra pessoa (não atribuídas ao Pedro) ficam só como leitura.
 - **Fase 1** pode ser pulada se o BLOCO já traz escopo, regras e critérios: no lugar do brainstorm, uma análise do BLOCO contra o `/plans` e o código.
 - **Fase 2**: sem README novo na principal; o plano fica em `plans/<tema>/`.
-- **Fase 3**: divisão por BLOCO em `PRÉ TAREFA NN` (pré-requisitos que não são escopo do BLOCO) e `TAREFA NN` (a entrega do BLOCO), cada uma com suas fases (`FASE A — <PREFIXO> ...`); convenções, seção 3.1. O `SUBTASKS.md` segue essa árvore.
-- **Fase 4**: task de execução que já existe → só preencher a descrição e criar as fases dentro dela. As que faltam: criar na lista Tarefas **sem parent**, ligar ao BLOCO com `add_task_link` e criar as fases como subtasks dela. O comentário de marco vai no BLOCO, e o link da execução entra no bloco de acompanhamento no fim da descrição do BLOCO. Status do BLOCO e da principal só com o OK do usuário.
-- **Fase 5**: executar uma fase = executar uma subtask; o status da task de execução segue a tabela das convenções (seção 2).
+- **Fase 3**: divisão do BLOCO em uma `TAREFA NN` por stack envolvida e, para o que é pré-requisito e não escopo do BLOCO, `PRÉ TAREFA NN` dentro da TAREFA que depende dela; cada uma com suas fases (`FASE A — <PREFIXO> ...`), cada fase só da stack da TAREFA. O `SUBTASKS.md` segue essa árvore.
+- **Fase 4**: o que já existe → só preencher a descrição e criar as fases dentro. O que falta: TAREFA com `parent` = `[MÓDULO] BLOCO`; PRÉ TAREFA com `parent` = a TAREFA; fase com `parent` = a TAREFA ou PRÉ TAREFA. Link só entre as TAREFAs de stack do mesmo BLOCO. O comentário de marco vai no BLOCO, e o bloco de acompanhamento do BLOCO leva só o plano (convenções, seção 6). Status do BLOCO e do épico só com o OK do usuário.
+- **Fase 5**: executar uma fase = executar uma subtask; o status de PRÉ TAREFA, TAREFA e BLOCO segue a tabela das convenções (seção 2).
 
 ### Fase 0 — Ler o card
 
@@ -48,7 +50,7 @@ Quando a task principal tem subtasks `BLOCO NN — ...` (regra do time, convenç
 2. `clickup_get_task` com `include: [description, subtasks, checklists, attachments, linked_tasks, dependencies, custom_fields]` e `expand_statuses: true`. Ler também os comentários (`clickup_get_task_comments`) e baixar anexos `.md` relevantes (`clickup_download_task_attachment`).
 3. Conferir e **parar** se: o card não estiver na lista Tarefas; o status for `a testar` ou além; o Pedro não for responsável e o card não tiver sido criado para ele (perguntar antes de seguir).
 4. Resumir no chat: título, autor, responsáveis, status, subtasks existentes, anexos, e o que o card pede em 3–5 linhas.
-5. **Card já tem subtasks ou README anexado?** → modo conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar). Subtasks `BLOCO NN` → modo módulo grande.
+5. **Card já tem subtasks ou README anexado?** → modo conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar). Épico com `BLOCO NN` / `REF — BLOCO NN`, ou task `[MÓDULO] BLOCO NN` → modo módulo grande.
 6. **Procurar cards relacionados fora da árvore:** abrir os `linked_tasks` do card e rodar `clickup_search` com 2–3 palavras-chave do tema (só `task`). Para cada card que trate da mesma funcionalidade (ex.: o front de outro dev criado em paralelo), mostrar no chat: título, responsável, status, se já começou (comentários, branch no repo) e **onde ele diverge** do que o card principal ou o README decidiram. Esse card nunca é editado; ele entra na divisão só como link com a subtask correspondente, e o alinhamento com o dono fica com o usuário.
 
 ### Fase 1 — Brainstorm
@@ -93,7 +95,7 @@ Gatilho: "começa a subtask X", link de subtask, ou continuação natural após 
    - código pronto sem PR → `pr git aguardando`;
    - PR aberto → `pr git aberta` + link no bloco de acompanhamento da subtask + comentário; se outras subtasks "aguardam" esta, trocar a dependência por link;
    - fim de sessão → comentário de handoff (3 linhas).
-5. Após mudar o status de uma subtask, recalcular o da task principal pela tabela das convenções (seção 2), com teto em `pr git aberta`.
+5. Após mudar o status de uma subtask, recalcular o das tasks acima pela tabela das convenções (seção 2), com teto em `pr git aberta`: a task principal, ou, no módulo grande, PRÉ TAREFA → TAREFA → BLOCO (este só com o OK).
 6. **Fim de uma task de back com front da web ligado** (task `[FRONTEND]` da web, em geral da Bruna): escrever um doc mínimo para o front (convenções, seção 5.2), mostrar no chat e **perguntar ao usuário se há algo importante a acrescentar para quem faz o front**. Só depois, com o OK, anexar o doc na task de front e comentar nela.
 7. Depois do merge, **não mexer mais**: o QA move de `a testar` em diante.
 
@@ -103,6 +105,7 @@ Gatilho: "começa a subtask X", link de subtask, ou continuação natural após 
 - Task em `a testar` ou além → somente leitura.
 - Task de outra pessoa que não foi atribuída ao Pedro nem criada por este fluxo → somente leitura; perguntar.
 - Card já dividido → conciliar, nunca duplicar.
+- `REF — BLOCO NN` ou subtask do épico → somente leitura; trabalhar no `[MÓDULO] BLOCO NN` ligado.
 - Divisão passou de ~8 subtasks → propor quebrar o card antes de criar.
 - Descrição original de outra pessoa → nunca reescrever; só acrescentar o bloco de acompanhamento no fim.
 

@@ -1,120 +1,101 @@
 ---
 name: clickup-card
-description: Use quando o usuário colar um link de card do ClickUp (app.clickup.com/t/...) ou pedir "/clickup-card <link>", "puxa o card", "começa a subtask", "atualiza o card", "abri o PR do card". Conduz o card de ponta a ponta — lê o card, faz o brainstorm-readme, anexa o README na task principal, divide em subtasks por stack ([WEB-BACKEND], [WEB-FRONTEND], [PDV]) relacionadas entre si (ou, em módulo grande, BLOCO → TAREFA por stack → fases, com branch intermediária por módulo), e acompanha a execução de cada subtask atualizando status e comentários dentro das convenções do board. Exige o conector do ClickUp (ferramentas clickup_*).
+description: Use quando o usuário colar um link de card do ClickUp (app.clickup.com/t/...) ou pedir "/clickup-card <link>", "puxa o card", "cria as fases", "começa a fase", "atualiza o card", "abri o PR do card". Parte do BLOCO (card funcional que o autor cria) e do card de stack que ele passa para o dev ([BACKEND], [FRONTEND], [PDV]): analisa o BLOCO contra o código, propõe e cria as FASES dentro do card de stack (pré-requisitos viram fases; fase longa se subdivide em itens com resumo no estilo da spec) e acompanha a execução de cada fase atualizando status e comentários dentro das convenções do board. Exige o conector do ClickUp (ferramentas clickup_*).
 ---
 
 # Card do ClickUp → entrega
 
-Leva um card do ClickUp do link até os PRs, usando o fluxo de planejamento de sempre (`brainstorm-readme` → `quick-plan` / `multi_file_workflow`) e mantendo o board atualizado sem gerar ruído para o time.
+Leva o card de stack do ClickUp do link até os PRs, usando o fluxo de planejamento de sempre (`brainstorm-readme` → `quick-plan` / `multi_file_workflow`) e mantendo o board atualizado sem gerar ruído para o time.
 
-**Antes de qualquer passo, leia `references/convencoes.md`.** Ele tem os IDs do board, quem move cada status, os prefixos por stack, o modelo de descrição, os modelos de comentário e as restrições. Este arquivo descreve só o fluxo.
+**Antes de qualquer passo, leia `references/convencoes.md`.** Ele tem os IDs do board, a estrutura BLOCO → card de stack → fases, quem move cada status, os modelos de descrição e de comentário e as restrições. Este arquivo descreve só o fluxo.
 
 <HARD-GATE>
 Nada é escrito no ClickUp (criar, editar, anexar, comentar, mudar status, relacionar) sem o usuário ter aprovado aquele lote no chat. O board é compartilhado: toda escrita notifica o time.
-Nunca mover task para `a testar` ou além, e nunca mexer em task que já esteja de `a testar` em diante — isso é do QA.
+O BLOCO é do autor: nunca editar, nunca criar subtask nele, nunca mudar o status.
+Nunca mover task para `ambiente dev` ou além, e nunca mexer em task que já esteja de `ambiente dev` em diante.
 </HARD-GATE>
+
+## Como o trabalho chega
+
+O autor (em geral o Luan) cria o **BLOCO**, que é o card funcional com problema, regras e critérios de aceite. Ele cria também um **card de stack** por stack envolvida (`[BACKEND]`, `[FRONTEND]`, `[PDV]`), já com responsável, e o BLOCO **aguarda** esses cards. O card de stack diz "analise o código e crie as suas FASES". A partir daí o trabalho é do dev, dentro do card de stack dele (convenções, seção 3).
 
 ## Fluxo
 
-Fase 0 (ler card) → Fase 1 (brainstorm) → Fase 2 (anexar README) → Fase 3 (propor divisão — gate) → Fase 4 (criar subtasks) → Fase 5 (executar subtask, repetível)
+Fase 0 (ler) → Fase 1 (analisar) → Fase 2 (propor as fases — gate) → Fase 3 (criar as fases) → Fase 4 (executar uma fase, repetível)
 
-Se o link recebido for de uma **subtask** já criada por este fluxo, pular direto para a Fase 5.
+Link de uma **fase** ou de uma **subdivisão** já criada → pular direto para a Fase 4.
 
-### Modo retroativo (card já implementado)
-
-Quando o trabalho do card já foi feito (há plano em `/plans` com SPEC/PLAN/TASKS/HANDOFF das entregas), o objetivo é só organizar o card:
-
-- **Fase 0** igual, mais: conferir no GitHub (`gh pr view` / `gh pr list --head <branch base>`) o estado real de cada PR das entregas e do PR base→`dev`.
-- **Fase 1 é pulada**: o README e as SPECs existentes são a fonte.
-- **Fase 3**: uma subtask por entrega e stack, montada a partir da SPEC e do HANDOFF (escopo, contrato, critérios por referência aos CA da SPEC, números da suíte, PRs). Os fronts saem dos guias em `doc-front/` quando houver.
-- **Fase 4**: cada subtask nasce **no status real** (ex.: código pronto sem PR → `pr git aguardando`; etapa mergeada na branch base → `pr git aberta`, convenções seção 3.2) e com o responsável de quem fez. O que ainda não começou nasce `pendente`, sem responsável.
-- **Relações**: como o backend já existe, quase tudo é **link** (convenções, seção 4). Dependência só para o que de fato ainda não foi implementado.
-- **Anexos**: cada SPEC vai para a subtask da sua entrega, com nome que diga a entrega (`SPEC-entrega-1-pdv-local.md`), e cada guia de front vai para a subtask do front. Anexos antigos com nome genérico na task principal ficam (o conector não remove anexos) e o comentário de marco explica onde está cada coisa agora.
-
-### Modo módulo grande (épico com BLOCOs)
-
-Quando o link é de um `[MÓDULO] BLOCO NN`, de uma subtask `BLOCO NN` / `REF — BLOCO NN` de um épico, ou de qualquer task dessa árvore. Molde: o BLOCO 01 do Financeiro (convenções, seção 3.1): `[MÓDULO] BLOCO NN` sem parent → uma `TAREFA` por stack (`[WEB-BACKEND]`, `[WEB-FRONTEND]`, `[PDV]`) → PRÉ TAREFAs dentro da TAREFA que depende delas → fases.
-
-- **Fase 0** igual, mais:
-  - link de `REF — BLOCO NN` (ou da subtask do épico) → abrir os `linked_tasks` e seguir para o `[MÓDULO] BLOCO NN`; a REF é só ponteiro, nunca recebe escrita. Sem BLOCO ligado → perguntar se cria no molde ou espera o autor.
-  - o material do BLOCO é o anexo ou a descrição dele. Abrir as subtasks: TAREFAs, PRÉ TAREFAs e fases que já existem (mesmo vazias) entram na divisão como estão, para serem preenchidas, nunca duplicadas. As de outra pessoa (não atribuídas ao Pedro) ficam só como leitura.
-  - **sugerir o fluxo de branches** (convenções, seção 3.2): conferir nos repos envolvidos se `feature/<módulo>` já existe (`git branch -a`); se não, propor criar a partir da `dev`.
-- **Fase 1** pode ser pulada se o BLOCO já traz escopo, regras e critérios: no lugar do brainstorm, uma análise do BLOCO contra o `/plans` e o código.
-- **Fase 2**: sem README novo na principal; o plano fica em `plans/<tema>/`.
-- **Fase 3**: divisão do BLOCO em uma `TAREFA NN` por stack envolvida e, para o que é pré-requisito e não escopo do BLOCO, `PRÉ TAREFA NN` dentro da TAREFA que depende dela; cada uma com suas fases (`FASE A — <PREFIXO> ...`), cada fase só da stack da TAREFA. O `SUBTASKS.md` segue essa árvore e mostra a branch de cada fase.
-- **Fase 4**: o que já existe → só preencher a descrição e criar as fases dentro. O que falta: TAREFA com `parent` = `[MÓDULO] BLOCO`; PRÉ TAREFA com `parent` = a TAREFA; fase com `parent` = a TAREFA ou PRÉ TAREFA. Link só entre as TAREFAs de stack do mesmo BLOCO. O comentário de marco vai no BLOCO, e o bloco de acompanhamento do BLOCO leva plano, branch base e PR base→`dev` (convenções, seção 6). Status do BLOCO e do épico só com o OK do usuário.
-- **Fase 5**: executar uma fase = executar uma subtask, com o fluxo de branches da seção 3.2 (passo 2 da Fase 5); o status de PRÉ TAREFA, TAREFA e BLOCO segue a tabela das convenções (seção 2).
-
-### Fase 0 — Ler o card
+### Fase 0 — Ler
 
 1. Extrair o id do link (`/t/<id>` ou `/t/<workspace>/<id>`).
-2. `clickup_get_task` com `include: [description, subtasks, checklists, attachments, linked_tasks, dependencies, custom_fields]` e `expand_statuses: true`. Ler também os comentários (`clickup_get_task_comments`) e baixar anexos `.md` relevantes (`clickup_download_task_attachment`).
-3. Conferir e **parar** se: o card não estiver na lista Tarefas; o status for `a testar` ou além; o Pedro não for responsável e o card não tiver sido criado para ele (perguntar antes de seguir).
-4. Resumir no chat: título, autor, responsáveis, status, subtasks existentes, anexos, e o que o card pede em 3–5 linhas.
-5. **Card já tem subtasks ou README anexado?** → modo conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar). Épico com `BLOCO NN` / `REF — BLOCO NN`, ou task `[MÓDULO] BLOCO NN` → modo módulo grande.
-6. **Procurar cards relacionados fora da árvore:** abrir os `linked_tasks` do card e rodar `clickup_search` com 2–3 palavras-chave do tema (só `task`). Para cada card que trate da mesma funcionalidade (ex.: o front de outro dev criado em paralelo), mostrar no chat: título, responsável, status, se já começou (comentários, branch no repo) e **onde ele diverge** do que o card principal ou o README decidiram. Esse card nunca é editado; ele entra na divisão só como link com a subtask correspondente, e o alinhamento com o dono fica com o usuário.
+2. `clickup_get_task` com `include: [description, subtasks, attachments, linked_tasks, dependencies, custom_fields]` e `expand_statuses: true`. Ler os comentários (`clickup_get_task_comments`) e baixar anexos `.md` relevantes (`clickup_download_task_attachment`).
+3. Achar as duas pontas pelas dependências (convenções, seção 3):
+   - link do **BLOCO** → abrir as tasks que ele aguarda; o card de stack do Pedro é onde se trabalha. Sem card de stack do Pedro → mostrar e perguntar (quem cria é o autor).
+   - link do **card de stack** → abrir o BLOCO (a task que aguarda este card, o "Bloqueio" no ClickUp) e ler problema, regras, critérios e decisões pendentes.
+   - abrir também os outros cards de stack do mesmo BLOCO, só como leitura.
+4. Conferir e **parar** se: o card não estiver na lista Tarefas; o status for `ambiente dev` ou além; o card de stack não for do Pedro (perguntar antes de seguir).
+5. Resumir no chat: BLOCO (título, autor, status, decisões pendentes), card de stack (responsável, status, pontos de atenção do autor), outros cards de stack e quem cuida de cada um, fases que já existem.
+6. **Card de stack já tem fases?** → conciliação: mostrar o que existe e perguntar se é para seguir a partir daí (nunca recriar).
+7. **Procurar cards relacionados fora do BLOCO:** `linked_tasks` e `clickup_search` com 2–3 palavras-chave do tema (só `task`). Para cada card da mesma funcionalidade, mostrar título, responsável, status e **onde diverge** do BLOCO. Esse card nunca é editado; entra só como link, e o alinhamento com o dono fica com o usuário.
 
-### Fase 1 — Brainstorm
+### Fase 1 — Analisar
 
-1. Invocar `brainstorm-readme` com o conteúdo do card (e o que o usuário descrever no chat) como material de entrada.
-2. Caminho do README: `plans/<tema>/<slug-do-card>/README.md`, com o link do card na primeira linha.
-3. **Ajuste no gate terminal do brainstorm:** apresentar a estimativa de tamanho, mas **não invocar** `quick-plan` nem `multi_file_workflow` — voltar para a Fase 2 desta skill. O plano detalhado é feito por subtask, na Fase 5.
+1. O BLOCO já traz problema, regras e critérios: no lugar de um brainstorm do zero, analisar o BLOCO e os pontos de atenção do card de stack contra o código e o `/plans`. Usar `brainstorm-readme` com o BLOCO como material de entrada quando houver decisão técnica a debater.
+2. Caminho: `plans/<tema>/<slug-do-bloco>/README.md`, com o link do BLOCO e do card de stack na primeira linha.
+3. **Decisões pendentes do BLOCO** que travam alguma fase: listar no chat. Elas são do autor; perguntar ao usuário se leva a dúvida para o BLOCO (convenções, seção 7).
+4. **Ajuste no gate terminal do brainstorm:** apresentar a estimativa de tamanho, mas **não invocar** `quick-plan` nem `multi_file_workflow`; voltar para a Fase 2 desta skill. O plano detalhado é feito por fase, na Fase 4.
 
-### Fase 2 — Anexar o README na task principal
+### Fase 2 — Propor as fases (GATE)
 
-Com o README aprovado e o "ok" para escrever no card:
+1. Dividir o card de stack em fases (convenções, seção 4):
+   - uma fase = um repo, uma branch, um PR; ordem: contrato → back → front;
+   - o que é **pré-requisito** (fundação de que outras fases precisam, mesmo fora do escopo do BLOCO) vira uma **fase normal**, nas primeiras letras, com a linha `Pré-requisito de: FASE X, Y` na descrição;
+   - fase longa (mais de uma entrega independente, ou que passaria de ~8 tasks no quick-plan) se **subdivide** em `X1`, `X2`… dentro dela, cada uma com resumo no estilo da spec.
+2. Escrever `plans/<tema>/<slug>/FASES.md` com a árvore: para cada fase e subdivisão, o título e a descrição completa nos modelos da seção 5, as relações e a branch.
+3. Mostrar no chat uma tabela (fase · repo · pré-requisito de · subdivisões · objetivo em 1 linha) e anexar o `FASES.md` para leitura no celular (convenções, seção 6).
+4. **Esperar "ok" explícito.** Ajustes voltam para o passo 2.
 
-1. Anexar o README (e, em qualquer fase, qualquer arquivo local): pedir um ticket por arquivo com `clickup_request_attachment_upload` (`task_id` + `file_name`), montar um `jobs.json` no scratchpad e rodar `python -I scripts/upload_attachments.py jobs.json`; apagar o `jobs.json` depois (tem os tickets). Os tickets vencem em poucos minutos: pedir todos e subir em seguida. Não usar `clickup_attach_task_file` com base64 para arquivos locais: o conteúdo inteiro iria no texto da chamada. Nome: `README.md` (ou `README-v<n>.md` em nova versão).
-2. Acrescentar o bloco de acompanhamento no fim da descrição (ver convenções, seção 6), sem tocar no texto original.
-3. Comentário de marco "README anexado".
+### Fase 3 — Criar no ClickUp
 
-### Fase 3 — Propor a divisão (GATE)
+1. Para cada fase, na ordem do `FASES.md`: `clickup_create_task` com `parent` = card de stack, `list_id` da lista Tarefas, `markdown_description`, status `pendente`, responsável = dono do card de stack. Depois as subdivisões, com `parent` = a fase. Fase já implementada nasce no status real (convenções, seção 4).
+2. Relações: dependência só entre fases e só quando a fase da qual se depende ainda não foi implementada; o resto é link (convenções, seção 4.2).
+3. Descrição do card de stack: reler na hora, manter o texto do autor intacto e acrescentar no fim só as seções `## Fases` e `## Acompanhamento (dev)` (convenções, seção 5.1).
+4. Atualizar o `FASES.md` com o id e o link de cada task criada.
+5. Um único comentário no card de stack: "Fases criadas".
+6. **Contrato com o outro lado:** se a fase de back expõe algo para o `[FRONTEND]` (ou o contrário), o combinado vai em comentário no **próprio** card de stack, com menção ao dono do outro card (convenções, seção 7.1). Mostrar o texto no chat antes.
 
-1. Dividir por stack conforme as convenções (seções 3 e 4): uma subtask por stack (`[WEB-BACKEND]`, `[WEB-FRONTEND]`, `[PDV]`); subtask que mexe em mais de um repo ganha fases, uma por repo e PR. Ordem: fase de contrato → back → front.
-2. Escrever `plans/<tema>/<slug>/SUBTASKS.md` com, para cada subtask: título com prefixo, stack, repo, tags, relações (dependência ou link, e com quem) e a descrição completa no modelo da seção 5.
-3. Mostrar no chat uma tabela (título · stack · relações · objetivo em 1 linha) e anexar o `SUBTASKS.md` para leitura no celular.
-4. Checar limites: subtask que passaria de ~8 tasks → dividir; mais de ~8 subtasks → propor quebrar o card principal.
-5. **Esperar "ok" explícito.** Ajustes voltam para o passo 2.
+### Fase 4 — Executar uma fase (repetível)
 
-### Fase 4 — Criar no ClickUp
+Gatilho: "começa a fase X", link de fase ou subdivisão, ou continuação natural após a Fase 3.
 
-1. Para cada subtask, na ordem do `SUBTASKS.md`: `clickup_create_task` com `parent` = id da task principal, `list_id` da lista Tarefas, `markdown_description`, `tags`, campo Stack, status `pendente`, **sem responsável**. Subtask com fases: criar as fases dentro dela (`parent` = a subtask).
-2. Criar as relações: `clickup_add_task_dependency` (`waiting_on`) só para quem depende de algo ainda não implementado; o resto com `clickup_add_task_link` (convenções, seção 4).
-3. Atualizar o `SUBTASKS.md` com o id e o link de cada subtask criada.
-4. Um único comentário na task principal: "Subtasks criadas".
-5. Se a task principal estiver em `aberto`/`pendente`, mover para `pendente` ou `em andamento` conforme o usuário indicar.
-
-### Fase 5 — Executar uma subtask (repetível)
-
-Gatilho: "começa a subtask X", link de subtask, ou continuação natural após a Fase 4.
-
-1. Ler a subtask. Ao começar: Pedro como responsável + status `em andamento` (um "ok" por subtask basta).
-2. **Branch.** Módulo grande (convenções, seção 3.2): no repo da fase, conferir se a `dev` andou desde a `feature/<módulo>`; se andou, atualizar a base primeiro (merge da `dev`, build e testes, `git push` só com o ok). Depois criar `feature/<módulo>-b<NN>-<t|pt><NN>-fase-<x>` a partir da base. Fora do módulo grande, branch a partir da `dev`, como de costume.
-3. Dimensionar a partir da descrição da subtask e invocar `quick-plan` (padrão) ou `multi_file_workflow`, passando a descrição como material da Fase 0 dela. O plano vai em `plans/<tema>/<slug>/<prefixo-da-subtask>/`.
-4. Com o plano aprovado: reescrever a descrição da task com o plano em alto nível e, se foi `multi_file_workflow`, anexar a `SPEC.md` nela (convenções, seção 5.1). Mostrar o texto no chat antes de enviar.
+1. Ler a fase e as subdivisões. Ao começar: status `em andamento` na fase (e no card de stack, se ainda estiver `pendente`). Um "ok" por fase basta.
+2. **Branch** (convenções, seção 8): conferir se a `dev` andou desde a branch base e, se andou, atualizar a base primeiro (merge da `dev`, build e testes, `git push` só com o ok). Depois criar a branch da fase a partir da base. Sem branch base, a partir da `dev`.
+3. Dimensionar a partir da descrição da fase e invocar `quick-plan` (padrão) ou `multi_file_workflow`, passando a descrição da fase e das subdivisões como material da Fase 0 dela. O plano vai em `plans/<tema>/<slug>/fase-<x>/`.
+4. Com o plano aprovado: se o planejamento mudou o que a fase entrega, atualizar a descrição da fase e das subdivisões (convenções, seção 5) e, se foi `multi_file_workflow`, anexar a `SPEC.md` na fase. Mostrar o texto no chat antes de enviar.
 5. Durante a execução, atualizar só nos marcos (convenções, seção 7):
    - bloqueio → `parado` + comentário;
-   - código pronto sem PR → `pr git aguardando`;
-   - PR aberto (no módulo grande, da fase para a base) → `pr git aberta` + link no bloco de acompanhamento da subtask + comentário; se outras fases "aguardam" esta, trocar a dependência por link;
+   - subdivisão com código pronto → `pr git aguardando` na subdivisão;
+   - código da fase pronto sem PR → `pr git aguardando`;
+   - PR aberto → `pr git aberta` + link no bloco de acompanhamento + comentário; se outras fases aguardam esta, trocar a dependência por link;
    - fim de sessão → comentário de handoff (3 linhas).
-6. Após mudar o status de uma subtask, recalcular o das tasks acima pela tabela das convenções (seção 2), com teto em `pr git aberta`: a task principal, ou, no módulo grande, PRÉ TAREFA → TAREFA → BLOCO (este só com o OK).
-7. **Fim de uma fase de back com `[WEB-FRONTEND]` ligado** (em geral da Bruna): se o que a fase entregou funciona sozinho — o front integra sem esperar as fases ainda em andamento —, escrever a seção "Pronto para integrar" da task de front (convenções, seção 5.2): em alto nível, o que já dá para fazer e os endpoints disponíveis na branch base. Mostrar no chat e **perguntar ao usuário se há sugestões (libs, convenções) para incluir**. Só com o OK, atualizar a descrição da task de front e comentar nela. Fase que depende da próxima → sem handoff agora; ele sai com a fase que fecha o recorte.
-8. Depois do merge, **não mexer mais no status**: o QA move de `a testar` em diante (no módulo grande, testando na branch base).
+6. Após mudar o status de uma subdivisão ou fase, recalcular o das tasks acima pela tabela das convenções (seção 2): subdivisões → fase → card de stack, com teto em `pr git aberta`. O BLOCO nunca.
+7. **Fim de uma fase de back com `[FRONTEND]` no mesmo BLOCO:** se o que a fase entregou funciona sozinho (o front integra sem esperar fase em andamento), montar o comentário "Pronto para integrar" (convenções, seção 7.1) no card `[BACKEND]`, com menção ao dono do `[FRONTEND]`. Mostrar no chat e **perguntar ao usuário se há sugestões (libs, convenções) para incluir**. Só com o OK, comentar. Fase que depende da próxima → sem comentário agora; ele sai com a fase que fecha o recorte.
+8. Depois do merge, **não mexer mais no status**: o QA move de `ambiente dev` em diante.
 
 ## Regras de PARE
 
 - Qualquer escrita no ClickUp sem aprovação do lote → pare (HARD-GATE).
-- Task em `a testar` ou além → somente leitura.
-- Task de outra pessoa que não foi atribuída ao Pedro nem criada por este fluxo → somente leitura; perguntar.
-- Card já dividido → conciliar, nunca duplicar.
-- `REF — BLOCO NN` ou subtask do épico → somente leitura; trabalhar no `[MÓDULO] BLOCO NN` ligado.
-- Fase de módulo grande sem conferir se a `dev` andou → pare e confira antes de criar a branch.
-- Divisão passou de ~8 subtasks → propor quebrar o card antes de criar.
-- Descrição original de outra pessoa → nunca reescrever; só acrescentar o bloco de acompanhamento no fim.
+- BLOCO → somente leitura; dúvida de regra só como comentário aprovado (convenções, seção 7).
+- Task em `ambiente dev` ou além → somente leitura.
+- Card de stack de outra pessoa → somente leitura; perguntar.
+- Card de stack já com fases → conciliar, nunca duplicar.
+- Card de stack faltando para a stack do Pedro → perguntar; quem cria é o autor do BLOCO.
+- Fase com branch base sem conferir se a `dev` andou → pare e confira antes de criar a branch.
+- Texto do autor no card de stack → nunca reescrever; só acrescentar `## Fases` e o acompanhamento no fim.
 
 ## Princípios
 
-- **`/plans` é a fonte da verdade do detalhe; o ClickUp é a vitrine.** O card aponta para o plano, não copia o conteúdo.
-- **Back e front da mesma funcionalidade andam juntos:** sempre relacionados, com o contrato descrito dos dois lados.
-- **Pouco ruído:** comentário só em marco, `notify_all: false`, criação em lote único.
+- **`/plans` é a fonte da verdade do detalhe; o ClickUp é a vitrine.** A descrição da fase diz o quê e o porquê em linguagem de negócio; o como fica no plano.
+- **O BLOCO é a spec; a fase é o recorte.** Regras e critérios não são copiados para as fases, só citados quando ajudam.
+- **Pouco ruído:** comentário só em marco, `notify_all: false`, criação em lote único; menção só para quem precisa agir.
 - **Plano no arquivo e no chat:** todo artefato de planejamento é mostrado no chat e anexado para leitura no celular.

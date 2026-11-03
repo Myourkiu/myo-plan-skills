@@ -13,7 +13,7 @@ Contém o plugin **`myo-plan-skills`** (publicado no marketplace **`myo`**).
 | `multi_file_workflow` | Fluxo de planejamento multi-arquivo (SPEC → PLAN → TASKS). |
 | `simple-implementation` | Implementa tasks pequenas com diagnóstico, TDD estrito e gates humanos. |
 | `commit-conversional-skill` | Impõe Conventional Commits (inglês, só título). |
-| `clickup-card` | Leva um card do ClickUp do link aos PRs: brainstorm, README anexado, subtasks por stack relacionadas (ou BLOCO → TAREFA por stack → fases nos módulos grandes, com branch intermediária e handoff do front por fase), status e comentários nas convenções do board. |
+| `clickup-card` | Leva o card de stack do ClickUp do link aos PRs: lê o BLOCO do autor, cria as fases no card de stack (pré-requisito vira fase, fase longa se subdivide), branch base opcional, contrato e handoff do front por comentário, status e comentários nas convenções do board. |
 
 ## Instalação
 
